@@ -1,75 +1,89 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 '''
 Modified by Bill Bushey <wbushey@acm.org> and Brian Young <byoung061@gmail.com> on August 10th, 2009
 '''
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 import htmllib
 import formatter
 import string 
 import sys,urllib
 import time
-import matplotlib.pyplot as plt
 import jieba
+import matplotlib.pyplot as plt
 
-def search(_list, c):
+def search(_list, e):
 	try:
-		i = _list.index(c)
+		_list.index(e)
 		return True
 	except:
 		return False
 
+def is_chinese(uchar):
+	return uchar >= u'/u4e00' and uchar<=u'/u9fa5'
+
 class HtmlTokenParser(htmllib.HTMLParser):
-    #重载了HTMLParser
 	# return a dictionary mapping anchor texts to lists
 	# of associated hyperlinks     
 	def __init__(self, verbose=0):
 		self.tokens = []
-        #二元记录   
 		self.binary_tokens = []
 		f = formatter.NullFormatter()
 		htmllib.HTMLParser.__init__(self, f, verbose)     
-		self.ignore_tags = ['script', 'style', 'SCRIPT', 'STYLE']
-		self.ignore_flag = False
+		self.a_flag = False
 	def unknown_tag(self):
 		self.tokens.append("TAG")
 		self.binary_tokens.append(1)
 	def unknown_starttag(self,tag, attrs):
 		self.tokens.append("<"+tag+">")
-        #如果是 Token 则加入1
 		self.binary_tokens.append(1)
 	def unknown_endtag(self,tag):
-        #tokens 记录标签
 		self.tokens.append("<\\"+tag+">")
-        #始终均有标签
 		self.binary_tokens.append(1)
 	def handle_data(self,data):
-		'''
-		#english
-		for t in string.split(data):
-		'''
-		#for Chinese split string to characters
-		if not self.ignore_flag:
+		#split words for Chinese
+		if self.a_flag:
 			'''
-			ignore style script
+			if is a tag, then add content as a single word to tokens
+			'''
+			self.tokens.append(data)
+			self.binary_tokens.append(-1)
+		else:
+			'''
+			else if is common content, split to words and add each word to tokens
 			'''
 			for t in jieba.cut(data):
-				self.tokens.append(t)
-				#对每一个词 添加-1
-				self.binary_tokens.append(-1)
+				t = t.lstrip()
+				if t:
+					self.tokens.append(t)
+					self.binary_tokens.append(-1)
+
 	def handle_starttag(self,tag, method, attrs):
-		if search(self.ignore_tags, tag):
-			self.ignore_flag = True
-			print '>> find <script>'
-		else:
+		#print 'starttag', tag
+		'''
+		if search(self.combine_tags, tag):
+			#print 'find combined tag', tag
+			pass
+		'''
+		if not search(self.combine_tags, tag):
+			#combine tag content
 			self.binary_tokens.append(1)
 			self.tokens.append("<"+tag+">")
-
+		if tag == 'a':
+			self.a_flag = True
 	def handle_endtag(self,tag, method):
-		if search(self.ignore_tags, tag):
-			self.ignore_flag = False
-		else:
+		if search(self.combine_tags, tag):
+			#print 'find combined tag'
+			pass
+		if not search(self.combine_tags, tag):
+			#combine tag content
 			self.tokens.append("<\\"+tag+">")
 			self.binary_tokens.append(1)
+		if tag == 'a':
+			self.a_flag = False
 		
 class HtmlBodyTextExtractor(HtmlTokenParser):
 	''' Modified to include the initialization of total_tokens_before'''
@@ -80,29 +94,23 @@ class HtmlBodyTextExtractor(HtmlTokenParser):
 		self.lookup0N = [0]
 		self.lookupN0 = [0]
 		self.body_txt = ""
+		self.combine_tags = [
+			'p',
+			'b',
+			'i',
+			'span',
+		]
 	
 	def close(self):
 		HtmlTokenParser.close(self)
+		#self.tokens.reverse()
+		#self.binary_tokens.reverse()
 		self._encode_binary_tokens()
 		self._initialise_lookups()
 		self.test()
 
-	''' Modified to set values in total_tokens_before'''
-	def _encode_binary_tokens(self):
-		i = 0
-		for x in self.binary_tokens:
-			if(abs(x + self.encoded[i]) < abs(self.encoded[i])):
-				self.encoded.append(0)
-				self.total_tokens_before.append(self.total_tokens_before[-1])
-				i = i + 1
-			self.encoded[i] = self.encoded[i] + x
-			self.total_tokens_before[i] = self.total_tokens_before[i] + 1
-
-
-		# total_tokens_before works better in the rest of the class if we shift all values up one index
-		self.total_tokens_before.insert(0,0) 
-	
 	def test(self):
+		'''
 		print ">> _encode_binary_tokens"
 		print '>> binary tokens', '>> tokens'
 		for i, d in enumerate(self.binary_tokens):
@@ -110,10 +118,14 @@ class HtmlBodyTextExtractor(HtmlTokenParser):
 
 		print '>> ... encoded', self.encoded
 		print '>> ... total_tokens_before', self.total_tokens_before
-
+		'''
+		s = 'logging >>tokens'
+		for i,w in enumerate(self.tokens):
+			s += str(i) + '  ' + w + '\n'
+		open('try.log','w').write(s)
 
 		import numpy as np
-		x = np.linspace(0, 10, len(self.binary_tokens))
+		x = np.linspace(0, len(self.binary_tokens), len(self.binary_tokens))
 		y = []
 		tag_num = 0
 		for i in self.binary_tokens:
@@ -128,25 +140,28 @@ class HtmlBodyTextExtractor(HtmlTokenParser):
 		plt.title("PyPlot First Example")
 		plt.legend()
 		plt.show()
-
-
 		
-		'''
-		print '>> _initialise_lookups'
-		print '>> ... lookupON', self.lookupON
-		print '>> ... lookupN0', self.lookupN0
-		'''
+	''' Modified to set values in total_tokens_before'''
+	def _encode_binary_tokens(self):
+		i = 0
+		for x in self.binary_tokens:
+			if(abs(x + self.encoded[i]) < abs(self.encoded[i])):
+				self.encoded.append(0)
+				self.total_tokens_before.append(self.total_tokens_before[-1])
+				i = i + 1
+			self.encoded[i] = self.encoded[i] + x
+			self.total_tokens_before[i] = self.total_tokens_before[i] + 1
+		# total_tokens_before works better in the rest of the class if we shift all values up one index
+		self.total_tokens_before.insert(0,0) 
 
 	def _initialise_lookups(self):
 		t = 0
-		#正向tag 数目
 		for x in self.encoded:
 			if(x>0):
 				t = t + x
 			self.lookup0N.append(t)
 		self.encoded.reverse()
 		t = 0
-		#反向tag 数目
 		for x in self.encoded:
 			if(x>0):
 				t = t + x
@@ -165,8 +180,6 @@ class HtmlBodyTextExtractor(HtmlTokenParser):
 	have occured upto that region.
 
 	The original method is available as _objective_fcn_old 
-	So that, we can get the pos of tokens to maximize the number of text tokens, as well with maximizing the number of tag tokens between and after text tokens, 
-	This algorithm just maximize the number of number of tokens of a tag-text-tag token-pair.
 	'''
 	def _objective_fcn(self,i,j):
 		tags_to_i = self.lookup0N[i]
@@ -207,16 +220,11 @@ class HtmlBodyTextExtractor(HtmlTokenParser):
 		i_max = 0
 		j_max = len(self.encoded)-1
 		for i in range(len(self.encoded)-1):
-			#越过tag
 			if self.encoded[i] > 0:	
 				continue
-			#i point to text tokens
 			for j in range(i,len(self.encoded)):
-				#search in remaining tag tokens
 				if self.encoded[j] > 0:
 					continue
-				#j point to following text tokens 
-				#between so i and j ,there are tag-text-tag tokens
 				obj = self._objective_fcn(i,j)
 				if(obj > obj_max):
 					obj_max = obj
@@ -224,39 +232,12 @@ class HtmlBodyTextExtractor(HtmlTokenParser):
 					j_max = j
 		start = self.total_tokens_before[i_max]
 		end = self.total_tokens_before[j_max]
-
-		self.body_txt = " ".join(x for x in self.tokens[start:end] if not self._is_tag(x))
-
-		# This is added for testing purposes, so that the old and new versions produce the same string.
-		self.body_txt = self.body_txt + " "
-
+		for x in self.tokens[start:end]:
+			if not self._is_tag(x):
+				self.body_txt += x
+				if x[0] < 'Z':
+					self.body_txt += ' '
 		return(self.body_txt)	
-
-	'''
-	Method which uses _objective_fcn_old, this function is in O(n^3)
-	'''
-	def body_text_old(self):
-		self.body_txt = ""
-		obj_max = 0
-		i_max = 0
-		j_max = len(self.encoded)-1
-		for i in range(len(self.encoded)-1):
-			for j in range(i,len(self.encoded)):
-				obj = self._objective_fcn_old(i,j)
-				if(obj > obj_max):
-					obj_max = obj
-					i_max = i
-					j_max = j
-		start = 0
-		end = 0
-		for x in self.encoded[:i_max]:
-			start = start + abs(x)
-		for x in self.encoded[j_max:]:
-			end = end + abs(x)
-		for x in self.tokens[start:-end]:
-			if(not(self._is_tag(x))):
-				self.body_txt = self.body_txt + x + " "
-		return(self.body_txt)
 
 	def summary(self, start=0, bytes=255):
 		if(not(self.body_txt)):
@@ -268,7 +249,7 @@ class HtmlBodyTextExtractor(HtmlTokenParser):
 	'''
 	def full_text(self):
 		ft = ""
-		ft = " ".join(x for x in self.tokens if not self._is_tag(x))
+		ft = "".join(x for x in self.tokens if not self._is_tag(x))
 		return ft
 
 if __name__ == '__main__':
