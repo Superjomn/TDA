@@ -1,6 +1,8 @@
 *.htm
 *.html
+*.shtml
 *.test
 *.png
 *.pyc
 *.clean
+*.log
