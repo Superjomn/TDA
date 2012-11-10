@@ -32,10 +32,9 @@ private:
 	Stack<Index> stack;
 public:
 	StyleTree();
-	bool initAddChild();
-	Index addChildTag(Hash hashtag, ChildTagPos pos);
-	Index addChildNode(Hash hashdata);
-	Index closeAddChild();
+    bool registerChildTag(Hash hashtag);
+    Index searchChild(Hash childhash, Index father, Index &lastBrother);
+    Index addChildTag(Hash hashdata, Index father, Index lastBrother);
 	virtual ~StyleTree();
 };
 

@@ -66,11 +66,20 @@ Index StyleTree::addNewChildTag(Hash hashtag, ChildTagPos pos)
 			//add to nodelist
 			nodelist.push_back(node);
 			cur = nodelist.size() - 1;
-			//get brother
+			//set brother
 			res = stack.pop(tem);
 			if (!res) throw runtime_error("can't get brother, pop: stack is empty!");
-			node.brother = 
-
+			node.brother = tem;
+			//connect to parent
+			//get parent
+			res = stack.getTop(tem);
+			if (!res) throw runtime_error("getTop: stack is empty");
+			else{
+				const Node *father = &nodelist.at(tem);
+				father->child = cur;
+			}
+			//push itself to stack
+			stack.push(cur);
 		}
 		// set brother
 		res = stack.pop(tem);
