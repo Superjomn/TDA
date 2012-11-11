@@ -10,6 +10,7 @@
 #include "Type.h"
 #include <iostream>
 #include <vector>
+#include "Stack.h"
 using namespace std;
 
 /* specify the pos of child tag in the construction 
@@ -22,10 +23,6 @@ using namespace std;
  * if childtag is END, then pop the stack as 
  * it's brother, pop stack as it's parent 
  */
-typedef enum ChildTagPos{
-	FIRST, MID, END
-}ChildTagPos; 
-
 class StyleTree {
 private:
 	vector<Node> nodelist;	

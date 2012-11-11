@@ -24,7 +24,7 @@ StyleTree::StyleTree() {
 	// TODO Auto-generated constructor stub
 }
 
-bool registerChildTag(Hash hashtag, Index father)
+bool StyleTree::registerChildTag(Hash hashtag, Index father)
 /*
  * given father node, if find the matching child, then add it's count
  * if cannot find the matching one, then create a new child.
@@ -42,11 +42,10 @@ bool registerChildTag(Hash hashtag, Index father)
     }
 }
 
-Index searchChild(Hash childhash, Index father, Index &lastBrother)
+Index StyleTree::searchChild(Hash childhash, Index father, Index &lastBrother)
 {
     Index child;
     Index brother;
-    Index lastBrother;
     // first child
     child = nodelist[father].child;
     if (child ==0) // means no child yet
@@ -74,7 +73,7 @@ Index searchChild(Hash childhash, Index father, Index &lastBrother)
     return child;
 }
 
-Index addChildTag(Hash hashdata, Index father, Index lastBrother)
+Index StyleTree::addChildTag(Hash hashdata, Index father, Index lastBrother)
 {
     // init new node
     Node node;
