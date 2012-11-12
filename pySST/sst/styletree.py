@@ -1,3 +1,4 @@
+from __future__ import division
 '''
 Created on Nov 11, 2012
 
@@ -17,16 +18,6 @@ Created on Nov 11, 2012
 # *#################################################*/
 from type import Node
 
-class Nodelist:
-    def __init__(self):
-        self.datas = []
-    def push(self, node):
-        self.datas.append(node)
-    def size(self):
-        return len(self.datas)
-    def latestIndex(self):
-        return self.size() - 1
-
 class Stack:
     def __init__(self):
         self.datas = []
@@ -39,7 +30,7 @@ class Stack:
     def getTop(self):
         return self.datas[-1]
 
-class _Tag:
+class ElementNode:
     '''
     base tag class
     data structure:
@@ -50,81 +41,110 @@ class _Tag:
             imp = 0,
         ]
     '''
-    def __init__(self):
-        self._datas = []
-        #attributes
-        tagname = ''
-        childtags = []
-        count = 1
-        imp = 0
-        #init
-        self._datas.append(tagname)
-        self._datas.append(childtags)
-        self._datas.append(count)
-        self._datas.append(imp)
+    def __init__(self, name = ''):
+        self._name = name
+        self._childStyleNodes = []
 
-    def getTagname(self):
-        return self._datas[0]
+    def getName(self):
+        return self._name
 
-    def getChildTags(self):
-        return self._datas[1]
+    def getChildStyleNodes(self):
+        return self._childStyleNodes
 
-    def getCount(self):
-        return self._datas[2]
-
-    def getImp(self):
-        return self._datas[3]
-
-    def setTagname(self, name):
-        self._datas[0] = name
-
-    def addChildTag(self, childtag):
+    def addChildStyleNode(self, node):
         '''
-        @childtag : Tag
+        @ node : StyleNode
         '''
-        self.getChildTags().append(childtag)
+        self._childStyleNodes.append(node)
 
-    def incCount(self):
-        self._datas[2] += 1
+    def _searchStyleNode(self, stylenodename):
+        for node in self.getChildStyleNodes():
+            if node.getPreview() == stylenodename:
+                return node
+        return False
 
-    def setImp(self, imp):
-        self._datas[3] = imp
+    def registerStyleNode(self, stylenode):
+        node = self._searchStyleNode(stylenode.getPreview())
+        if node:
+            node.incCount()
+            return node
+        else:
+            self.addChildStyleNode(stylenode)
 
     def __str__(self):
-        res = '(tagname: ' + str(self.getTagname())
-        res += ' count: ' + str(self.getCount()) + '\n'
+        res = '(tagname: ' + str(self.getName()) + '\n'
         res += '['
-        for child in self.getChildTags():
+        for child in self.getChildStyleNodes():
             res += str(child)
         res += '])'
         return res
         
-class Tag(_Tag):
+
+class StyleNode:
     def __init__(self):
-        _Tag.__init__(self)
+        self._preview = ''
+        self._imp = 0
+        self._count = 1
+        self._children = []
 
-    def _searchChilds(self, tagname):
-        for childtag in self.getChildTags():
-            if childtag.getTagname() == tagname:
-                return childtag
-        return False
+    def getPreview(self):
+        #return self._preview
+        return self.generatePreview()
 
-    def registerChild(self, tagname):
-        child = self._searchChilds(tagname)
-        if child:
-            child.incCount()
-        else:
-            child = Tag()
-            child.setTagname(tagname)
-            self.addChildTag(child)
-        return child
+    def getImp(self):
+        return self._imp
+
+    def getCount(self):
+        return self._count
+
+    def _setPreview(self, s):
+        self._preview = s
+
+    def addChildElement(self, childElement):
+        self._children.append(childElement)
+
+    def generatePreview(self):
+        res = ''
+        for child in self.getChildrenElements():
+            res += child.getName()
+            res += ' '
+        #self._setPreview(res)
+        return res
+            
+    def getChildrenElements(self):
+        return self._children
+
+    def incCount(self):
+        self._count += 1
+
+    def setImp(self, imp):
+        self._imp  = imp
+
+    def __str__(self):
+        res = 'stylenode:'
+        res += self.getPreview()
+        res += '['
+        for child in self.getChildrenElements():
+            res += str(child)
+        res += ']'
+        return res
+
+class StyleTree:
+    def __init__(self):
+        self.body = ElementNode()
+
+    def cal(self):
+        pass
+        
+
 
 
 if __name__ == '__main__':
-    tag = Tag()
-    tag.setTagname('body')
-    p = tag.registerChild('p')
-    tag.registerChild('p')
-    tag.registerChild('b')
-    p.registerChild('table')
-    print tag
+    ele = ElementNode('body')
+    p = ElementNode('p')
+    b = ElementNode('b')
+    stylenode = StyleNode()
+    stylenode.addChildElement(p)
+    stylenode.addChildElement(b)
+    ele.registerStyleNode(stylenode)
+    print ele
