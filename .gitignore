@@ -7,3 +7,8 @@
 *.clean
 *.log
 .metadata
+*.o
+.crpoject
+.project
+.sconsign.dblite
+*build*

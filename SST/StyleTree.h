@@ -4,7 +4,6 @@
  *  Created on: Nov 9, 2012
  *      Author: chunwei
  */
-
 #ifndef STYLETREE_H_
 #define STYLETREE_H_
 #include "Type.h"
@@ -23,16 +22,18 @@ using namespace std;
  * if childtag is END, then pop the stack as 
  * it's brother, pop stack as it's parent 
  */
-class StyleTree {
-private:
-	vector<Node> nodelist;	
-	Stack<Index> stack;
-public:
-	StyleTree();
-    bool registerChildTag(Hash hashtag, Index father);
-    Index searchChild(Hash childhash, Index father, Index &lastBrother);
-    Index addChildTag(Hash hashdata, Index father, Index lastBrother);
-	virtual ~StyleTree();
-};
+namespace styletree{
+    class StyleTree {
+    private:
+        vector<Node> nodelist;	
+        Stack<Index> stack;
+    public:
+        StyleTree();
+        bool registerChildTag(Hash hashtag, Index father);
+        Index searchChild(Hash childhash, Index father, Index &lastBrother);
+        Index addChildTag(Hash hashdata, Index father, Index lastBrother);
+        void showNodeList();
+    };
+}
 
 #endif /* STYLETREE_H_ */

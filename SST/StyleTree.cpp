@@ -19,9 +19,11 @@
  *  brother always link to the last brother found
  *  imp is finally calculated value using count
  *#################################################*/
+using namespace styletree;
 
 StyleTree::StyleTree() {
 	// TODO Auto-generated constructor stub
+    cout<<"construct.."<<endl;
 }
 
 bool StyleTree::registerChildTag(Hash hashtag, Index father)
@@ -88,8 +90,23 @@ Index StyleTree::addChildTag(Hash hashdata, Index father, Index lastBrother)
     nodelist[father].child = nodelist.size() - 1;
 }
 
+void StyleTree::showNodeList()
+{
+    cout<<">> sizeof nodelist: "<< nodelist.size()<<endl;
+    vector<Node>::iterator node;
+    for(vector<Node>::iterator i = nodelist.begin();
+                               i != nodelist.end(); ++i)
+    {
+        node = i;
+        cout<<".. hash:"<<node->hash;
+        cout<<" child:"<<node->child;
+        cout<<" brother:"<<node->brother;
+        cout<<endl;
+    }
+}
 
 StyleTree::~StyleTree() {
 	// TODO Auto-generated destructor stub
+    cout<<"desconstruct"<endl;
 }
 
