@@ -39,44 +39,92 @@ class Stack:
     def getTop(self):
         return self.datas[-1]
 
-class StyleTree:
+class _Tag:
+    '''
+    base tag class
+    data structure:
+        [
+            tagname,
+            childtags: [],
+            count = 1,
+            imp = 0,
+        ]
+    '''
     def __init__(self):
-        self.nodelist = Nodelist()
-        self.stack = Stack()
+        self._datas = []
+        #attributes
+        tagname = ''
+        childtags = []
+        count = 1
+        imp = 0
+        #init
+        self._datas.append(tagname)
+        self._datas.append(childtags)
+        self._datas.append(count)
+        self._datas.append(imp)
 
-    def registerChildTag(self, hash_tag, index_father):
+    def getTagname(self):
+        return self._datas[0]
+
+    def getChildTags(self):
+        return self._datas[1]
+
+    def getCount(self):
+        return self._datas[2]
+
+    def getImp(self):
+        return self._datas[3]
+
+    def setTagname(self, name):
+        self._datas[0] = name
+
+    def addChildTag(self, childtag):
         '''
-         * given father node, if find the matching child, then add it's count
-         * if cannot find the matching one, then create a new child.
+        @childtag : Tag
         '''
-        lastBrother = None
-        child = None
-        if child == self.searchChild(hash_tag, index_father, lastBrother):
-            self.nodelist[child].count += 1
+        self.getChildTags().append(childtag)
+
+    def incCount(self):
+        self._datas[2] += 1
+
+    def setImp(self, imp):
+        self._datas[3] = imp
+
+    def __str__(self):
+        res = '(tagname: ' + str(self.getTagname())
+        res += ' count: ' + str(self.getCount()) + '\n'
+        res += '['
+        for child in self.getChildTags():
+            res += str(child)
+        res += '])'
+        return res
+        
+class Tag(_Tag):
+    def __init__(self):
+        _Tag.__init__(self)
+
+    def _searchChilds(self, tagname):
+        for childtag in self.getChildTags():
+            if childtag.getTagname() == tagname:
+                return childtag
+        return False
+
+    def registerChild(self, tagname):
+        child = self._searchChilds(tagname)
+        if child:
+            child.incCount()
         else:
-            self.addChildTag(hash_tag, index_father, lastBrother)
-    
-    def searchChild(self, hash_child, index_father, list_lastBrother):
-        child = None
-        brother = None
-        child = self.nodelist[index_father].child
-        if child == 0:
-            return False
-        else:
-            if not self.nodelist[child].hash == hash_child:
-                brother = self.nodelist[child].brother
-            while brother != 0:
-                if self.nodelist[brother].hash == hash_child:
-                    child = brother
-                list_lastBrother[0] = brother
-                brother = self.nodelist[brother].brother
+            child = Tag()
+            child.setTagname(tagname)
+            self.addChildTag(child)
         return child
-    
-    def addChildTag(self, hash_data, index_father, index_lastBrother):
-        node = Node()
-        node.hash = hash_data
-        node.brother = index_lastBrother
-        self.nodelist.append(node)
-        self.nodelist[index_father].child = len(self.nodelist) - 1
 
 
+if __name__ == '__main__':
+    tag = Tag()
+    tag.setTagname('body')
+    p = tag.registerChild('p')
+    tag.registerChild('p')
+    tag.registerChild('b')
+    p.registerChild('table')
+    print tag
