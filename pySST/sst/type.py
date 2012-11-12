@@ -10,6 +10,4 @@ class Node:
         self.hash = None
         self.imp = 0
         self.count = 1
-
 pass
-
