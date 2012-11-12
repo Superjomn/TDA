@@ -17,6 +17,7 @@ Created on Nov 11, 2012
 # *  imp is finally calculated value using count
 # *#################################################*/
 from type import Node
+import math
 
 class Stack:
     def __init__(self):
@@ -44,6 +45,9 @@ class ElementNode:
     def __init__(self, name = ''):
         self._name = name
         self._childStyleNodes = []
+        self._count = 1
+        self._imp = 0
+        self.type = 'elementnode'
 
     def getName(self):
         return self._name
@@ -51,6 +55,12 @@ class ElementNode:
     def getChildStyleNodes(self):
         return self._childStyleNodes
 
+    def getImp(self):
+        return self._imp
+
+    def setImp(self, imp):
+        self._imp = imp
+        
     def addChildStyleNode(self, node):
         '''
         @ node : StyleNode
@@ -62,6 +72,15 @@ class ElementNode:
             if node.getPreview() == stylenodename:
                 return node
         return False
+
+    def incCount(self):
+        '''
+        count pages that contain node
+        '''
+        self._count += 1
+
+    def getCount(self):
+        return self._count
 
     def registerStyleNode(self, stylenode):
         node = self._searchStyleNode(stylenode.getPreview())
@@ -86,6 +105,7 @@ class StyleNode:
         self._imp = 0
         self._count = 1
         self._children = []
+        self.type = 'stylenode'
 
     def getPreview(self):
         #return self._preview
@@ -116,6 +136,8 @@ class StyleNode:
 
     def incCount(self):
         self._count += 1
+        for element in self.getChildrenElements():
+            element.incCount()
 
     def setImp(self, imp):
         self._imp  = imp
@@ -132,12 +154,45 @@ class StyleNode:
 class StyleTree:
     def __init__(self):
         self.body = ElementNode()
+        #num of sitepages
+        self.pageNum = 0
 
-    def cal(self):
-        pass
-        
+    def calNodeImp(self, element):
+        if element.getImp():
+            return element.getImp()
+        #else
+        res = 0
+        m = element.getCount()
+        if m == 1:
+            res = 1
+        else:
+            for stylenode in element.getChildStyleNodes():
+                pi = stylenode.getCount() / self.pageNum
+                res -= pi * math.log(m, pi)
+        element.setImp(res)
+        return res
 
-
+    def calCompImp(self, node):
+        r = 0.1
+        if node.getImp():
+            return node.getImp()
+        #else
+        res = 0
+        if node.type == 'elementnode':
+            res += (1 - r) * self.calNodeImp(node)
+            tem = 0
+            for stylenode in node.getChildStyleNodes():
+                pi = stylenode.getCount() / self.pageNum
+                tem += pi * self.calCompImp(stylenode)
+            res += r * tem
+        elif node.type == 'stylenode':
+            children = node.getChildrenElements()
+            k = len(children)
+            for element in children:
+                res += self.calCompImp(element)
+            res /= k
+        node.setImp(res)
+        return res
 
 if __name__ == '__main__':
     ele = ElementNode('body')
