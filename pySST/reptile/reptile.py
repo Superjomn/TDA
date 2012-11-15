@@ -24,7 +24,7 @@ class _Reptile:
     def __init__(self, pageNum=200):
         self._urlist = Urlist()
         self._queue = Queue()
-        self._pageNum = pageNum
+        self.pageNum = pageNum
         self._downloadedPageNum = 0
 
     def matchUrl(self, url):
@@ -39,7 +39,7 @@ class _Reptile:
                 if not self._urlist.find(url):
                     self._queue.put(url)
 
-    def _outPageRange(self):
+    def outPageRange(self):
         '''
         num of downloaded page is outof range?
         return true/false
@@ -47,6 +47,7 @@ class _Reptile:
         return self._pageNum > self._downloadedPageNum
 
     def requestSource(self, url):
+        self.pageNum += 1
         self.opener = urllib2.build_opener()     
         request = urllib2.Request(url) 
         request.add_header('Accept-encoding', 'gzip')
@@ -74,6 +75,51 @@ class _Reptile:
             page.close()  
         except:  
             print 'time out'  
+
+
+from sourseparser import SourceParser
+from config import Config
+
+class Reptile(_Reptile):
+    '''
+    main reptile
+    '''
+    def __init__(self):
+        _config = Config()
+        _Reptile.__init__(_config.getInt('reptile', 'page_num'))
+        self.netloc = 'www.sina.com.cn'
+        self.curPageUrl = ''
+        self._sourceparser = SourceParser()
+        self.inQueue.put( _config.get('reptile', 'startpage') )
+
+    def matchUrl(self, url):
+        return self._sourceparser.matchUrl(url)
+
+    def run(self):
+        while not self._queue.empty():
+            if not self.outPageRange():
+                url = self.inQueue.get()
+                print 'post: ', url
+                _source = self.requestSource(url)
+                print 'get: source length ', len(_source)
+                self._sourceparser.setSource(_source)
+                self._sourceparser.saveSource(self.pageNum)
+                _absurls = self._sourceparser.getAbsUrls()
+                for url in _absurls:
+                    self.inQueue(url)
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
 
 if __name__ == '__main__':
     reptile = _Reptile()
