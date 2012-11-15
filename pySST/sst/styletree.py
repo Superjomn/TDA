@@ -16,20 +16,8 @@ Created on Nov 11, 2012
 # *  brother always link to the last brother found
 # *  imp is finally calculated value using count
 # *#################################################*/
-from type import Node
+#from type import Node
 import math
-
-class Stack:
-    def __init__(self):
-        self.datas = []
-    def push(self, data):
-        self.datas.append(data)
-    def pop(self):
-        return self.datas.pop()
-    def size(self):
-        return len(self.datas)
-    def getTop(self):
-        return self.datas[-1]
 
 class ElementNode:
     '''
