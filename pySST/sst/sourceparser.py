@@ -39,12 +39,10 @@ class SourceParser:
                 self.styletree.body
             ]
         )
-
-    def _getTag(self, node):
-        end = str(node).index('>')
-        return str(node)[:end+1]
+        self.parseIter()
 
     def parseIter(self):
+        print 'parseIter'
         if not self.stack.empty():
             (node , element) = self.stack.pop()
             stylenode = StyleNode()
@@ -56,3 +54,15 @@ class SourceParser:
                 stylenode.addChildElement(element)
             element.registerStyleNode(stylenode)
 
+    def _getTag(self, node):
+        end = str(node).index('>')
+        return str(node)[:end+1]
+
+
+if __name__ == '__main__':
+    sourceparser = SourceParser()
+    content = open('html').read()
+    print 'content', len(content)
+    sourceparser.setSource(content)
+    sourceparser.parse()
+    
