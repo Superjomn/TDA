@@ -23,7 +23,7 @@ class _Reptile:
     '''
     def __init__(self, pageNum=200):
         self._urlist = Urlist()
-        self._queue = Queue()
+        self._queue = Q.Queue()
         self.pageNum = pageNum
         self._downloadedPageNum = 0
 
@@ -34,7 +34,7 @@ class _Reptile:
         '''
         pass
     def inQueue(self, url):
-        if not self._outPageRange():
+        if not self.outPageRange():
             if self.matchUrl(url):
                 if not self._urlist.find(url):
                     self._queue.put(url)
@@ -44,7 +44,7 @@ class _Reptile:
         num of downloaded page is outof range?
         return true/false
         '''
-        return self._pageNum > self._downloadedPageNum
+        return self.pageNum < self._downloadedPageNum
 
     def requestSource(self, url):
         self.pageNum += 1
@@ -77,8 +77,10 @@ class _Reptile:
             print 'time out'  
 
 
-from sourseparser import SourceParser
+from sourceparser import SourceParser
 from config import Config
+import random
+import time
 
 class Reptile(_Reptile):
     '''
@@ -86,41 +88,39 @@ class Reptile(_Reptile):
     '''
     def __init__(self):
         _config = Config()
-        _Reptile.__init__(_config.getInt('reptile', 'page_num'))
-        self.netloc = 'www.sina.com.cn'
+        _Reptile.__init__(self, _config.getint('reptile', 'page_num'))
+        self.netloc = 'news.sina.com.cn'
         self.curPageUrl = ''
         self._sourceparser = SourceParser()
-        self.inQueue.put( _config.get('reptile', 'startpage') )
+        self._queue.put( _config.get('reptile', 'startpage') )
 
     def matchUrl(self, url):
+        print 'match url:', url
         return self._sourceparser.matchUrl(url)
 
     def run(self):
+        print '.. run'
         while not self._queue.empty():
-            if not self.outPageRange():
-                url = self.inQueue.get()
-                print 'post: ', url
-                _source = self.requestSource(url)
-                print 'get: source length ', len(_source)
-                self._sourceparser.setSource(_source)
-                self._sourceparser.saveSource(self.pageNum)
-                _absurls = self._sourceparser.getAbsUrls()
-                for url in _absurls:
-                    self.inQueue(url)
-
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
+            time.sleep(random.randint(1,5))
+            print '.. while not run'
+            url = self._queue.get()
+            self._sourceparser.setCurPageUrl(url)
+            #if not self.outPageRange():
+            #if True:
+            print '.. post: ', url
+            _source = self.requestSource(url)
+            if not _source:
+                continue
+            print '.. get: source length ', len(_source)
+            self._sourceparser.setSource(_source)
+            self._sourceparser.saveSource(self.pageNum)
+            _absurls = self._sourceparser.getAbsUrls()
+            for url in _absurls:
+                self.inQueue(url)
 
 
 if __name__ == '__main__':
-    reptile = _Reptile()
-    print reptile.requestSource('http://www.sina.com.cn/')
+    reptile = Reptile()
+    #print reptile.requestSource('http://www.cau.edu.cn')
+    reptile.run()
+

@@ -11,7 +11,7 @@ class _UrlParser:
         self._netlocs = netlocs
 
     def matchUrl(self, url):
-        netloc = urlparse.urlparse(url)['netloc']
+        netloc = urlparse.urlparse(url).netloc
         return netloc in self._netlocs
 
     def setFiletypes(self, typedic={}):
@@ -33,6 +33,8 @@ class _UrlParser:
         return 'html'
 
     def toAbsUrl(self, curPageUrl, newUrl):
+        #print '.. curPageUrl: ', curPageUrl
+        #print '.. newUrl: ', newUrl
         if not newUrl:
             return curPageUrl
         if len(newUrl)>7 and newUrl[:7] == 'http://':
@@ -45,14 +47,14 @@ class _SourceParser(_UrlParser):
     parse html and url
     '''
     def __init__(self, netlocs=[]):
-        _UrlParser.__init__(netlocs)
+        _UrlParser.__init__(self, netlocs)
 
     def setSource(self, source):
         '''
         put in html source
         '''
         self.source = source
-        self._pq = pq(self.source)
+        self.pq = pq(self.source)
 
     def saveSource(self, key):
         pass
@@ -67,21 +69,21 @@ class _SourceParser(_UrlParser):
         links = self._getLinks()
         absurls = []
         for link in links:
-            assert( self._curPageUrl != type([]))
+            #assert( self._curPageUrl != type([]))
             absurl = self.toAbsUrl(self._curPageUrl, link)
+            #print '.. trans absurl', absurl
             absurls.append(absurl)
+        return absurls
 
     def _getLinks(self):
-        '''
-        [ [title, href] ]
-        '''
-        a=self.pq('a')
+        a = self.pq('a')
         aa = []
         for i in range(len(a)):
             aindex=a.eq(i)
             href = aindex.attr('href')
             #print '.. html link:', href
-            aa.append( [aindex.text(), href])
+            #aa.append( [aindex.text(), href])
+            aa.append(href)
         return aa
 
 import os.path
@@ -89,12 +91,12 @@ class SourceParser(_SourceParser):
     def __init__(self):
         _config = Config()
         _netloc = _config.get('reptile', 'netloc')
-        _SourceParser.__init__([_netlocs])
+        _SourceParser.__init__(self, [_netloc])
         self._sourcepath = _config.get('path', 'source')
 
     def saveSource(self, key):
         print '.. saving ', key
-        f = open( self._sourcepath + key , 'w')
+        f = open( self._sourcepath + str(key), 'w')
         f.write(self.source)
         f.close()
 
