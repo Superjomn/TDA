@@ -24,6 +24,9 @@ def getTag(node):
 
 datanodenames = ['a', 'p', 'b',]
 
+def trim(text):
+    return text.lstrip().rstrip()
+
 import re
 def getTagName(node):
     t = re.compile("^<[\s]*(\S*)[\s>]")
@@ -52,7 +55,7 @@ class ElementNode:
         self.type = 'elementnode'
 
     def setName(self, name):
-        self._name =  name
+        self._name =  str(name)
 
     def getName(self):
         return self._name
@@ -79,7 +82,9 @@ class ElementNode:
             'B',
         ]
         datanode = DataNode()
-        tagname = getTagName(node)
+        #use lxml to parse html and get text data
+        root = etree.XML( str(node))
+        tagname = root.tag
         if tagname in nodenames:
             datanode.setTagNode(node)
             self.addChildStyleNode(datanode)
@@ -115,7 +120,8 @@ class ElementNode:
             return node
         else:
             self.addChildStyleNode(stylenode)
-            print '.. return stylenode ', stylenode
+            print '.. return stylenode ', 
+            print str(stylenode)
             return stylenode
 
     def __str__(self):
@@ -137,6 +143,9 @@ class StyleNode:
         self.type = 'stylenode'
 
     def generateStyleNode(self, node):
+        '''
+        @node : PyQuery
+        '''
         childnodes = node.children()
         for i in range(len(childnodes)):
             childnode = childnodes.eq(i)
@@ -147,7 +156,6 @@ class StyleNode:
             element = ElementNode(self._getTag(childnode))
             print '.. Element : ',element
             self.addChildElement(element)
-
 
     def getPreview(self):
         #return self._preview
@@ -203,28 +211,40 @@ class StyleNode:
 from copy import deepcopy as dc
 class DataNode(StyleNode):
     '''
+    DataNode is a special StyleNode
     for nodes like b p img a
     '''
     def __init__(self, data = ''):
         print '>> construct DataNode'
-        ElementNode.__init__(self, hash(data))
+        StyleNode.__init__(self)
+
+    def setName(self, data):
+        self._name = str(data)
+
+    def getName(self):
+        return self._name
+
+    def getPreview(self):
+        return self._name
 
     def setTextNode(self, node):
         '''
-        text node and save hash
+        set self as a Text Node
+        just save the hash of text content
         '''
-        _nodechildren = node.children()
-        for i in range(len(_nodechildren)):
-            _node.remove(_nodechildren.eq(i))
-        res = str(_node)
-        if res.lstrip():
-            self.setName (hash(str(_node)))
+        #use lxml to parse html and get text data
+        root = etree.XML( str(node))
+        data = root.text
+        if trim(data):
+            self.setName(hash(data))
             return True
         return False
 
     def setTagNode(self, node):
         '''
-        img a p b
+        set self as a Tag Node 
+        like tagnode: img a p b
+        just save the hash of whole tag
         '''
         self.setName(hash(str(node)))
 
@@ -239,6 +259,10 @@ class StyleTree:
         self.pageNum = 0
 
     def calNodeImp(self, element):
+        '''
+        calcuate the node importance
+        @ element : ElementNode
+        '''
         if element.getImp():
             return element.getImp()
         #else
@@ -254,6 +278,10 @@ class StyleTree:
         return res
 
     def calCompImp(self, node):
+        '''
+        calculate the composite importance
+        @ node : StyleNode or ElementNode
+        '''
         r = 0.1
         if node.getImp():
             return node.getImp()

@@ -68,9 +68,12 @@ class SourceParser:
             stylenode = StyleNode()
             stylenode.generateStyleNode(node)
             _stylenode = element.registerStyleNode(stylenode)
-            for i in range(len(childnodes)):
-                childnode = _stylenode.getChild(i)
-                self.stack.push([ childnodes.eq(i), childnode ])
+            try:
+                for i in range(len(childnodes)):
+                    childnode = _stylenode.getChild(i)
+                    self.stack.push([ childnodes.eq(i), childnode ])
+            except:
+                pass
                 
         while not self.stack.empty():
             (node , element) = self.stack.pop()
