@@ -22,14 +22,16 @@ def getTag(node):
     end = str(node).index('>')
     return str(node)[:end+1]
 
+datanodenames = ['a', 'p', 'b',]
+
 import re
 def getTagName(node):
     t = re.compile("^<[\s]*(\S*)[\s>]")
     res = t.findall(str(node))[0]
-    if res:
-        return res[0]
+    if res: return res
     return False
 
+from lxml import etree
 class ElementNode:
     '''
     base tag class
@@ -42,6 +44,7 @@ class ElementNode:
         ]
     '''
     def __init__(self, name = ''):
+        print ">>> construct ElementNode: %s" % name
         self._name = name
         self._childStyleNodes = []
         self._count = 1
@@ -116,7 +119,7 @@ class ElementNode:
             return stylenode
 
     def __str__(self):
-        #print 'element str:'
+        print 'element str:'
         res = "[.{%s} " % self.getName()
         for node in self.getChildStyleNodes():
             res += str(node)
@@ -126,6 +129,7 @@ class ElementNode:
         
 class StyleNode:
     def __init__(self):
+        print "construct StyleNode: ",
         self._preview = ''
         self._imp = 0
         self._count = 1
@@ -136,6 +140,10 @@ class StyleNode:
         childnodes = node.children()
         for i in range(len(childnodes)):
             childnode = childnodes.eq(i)
+            #skip data nodes
+            tagname = getTagName(childnode)
+            if tagname in datanodenames: continue
+            #generate ...
             element = ElementNode(self._getTag(childnode))
             print '.. Element : ',element
             self.addChildElement(element)
@@ -180,7 +188,7 @@ class StyleNode:
         self._imp  = imp
 
     def __str__(self):
-        #print 'stylenode str:'
+        print 'stylenode str:'
         res = '[.' + "{(%s)}"%self.getPreview()
         res += " "
         for element in self.getChildrenElements():
@@ -193,19 +201,19 @@ class StyleNode:
         return str(node)[:end+1]
 
 from copy import deepcopy as dc
-class DataNode(ElementNode):
+class DataNode(StyleNode):
     '''
     for nodes like b p img a
     '''
     def __init__(self, data = ''):
+        print '>> construct DataNode'
         ElementNode.__init__(self, hash(data))
 
     def setTextNode(self, node):
         '''
         text node and save hash
         '''
-        _node = dc(node)
-        _nodechildren = _node.children()
+        _nodechildren = node.children()
         for i in range(len(_nodechildren)):
             _node.remove(_nodechildren.eq(i))
         res = str(_node)
@@ -219,6 +227,10 @@ class DataNode(ElementNode):
         img a p b
         '''
         self.setName(hash(str(node)))
+
+    def __str__(self):
+        print '.. datanode:'
+        return self.getName()
 
 class StyleTree:
     def __init__(self):

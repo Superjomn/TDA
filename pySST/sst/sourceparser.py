@@ -47,28 +47,26 @@ class SourceParser:
         self.parseIter()
 
     def parseIter(self):
-        def addDataNode(fnode):
+        def addDataNode(fnode, element):
+            print 'addDataNode'
             children = fnode.children()
             for i in range(len(children)):
                 child = children.eq(i)
                 if getTagName(child) in nodenames:
                     dn = DataNode()
                     dn.setTagNode(child)
-                    fnode.registerStyleNode(dn)
+                    element.registerStyleNode(dn)
             #add text node
             dn = DataNode()
             if dn.setTextNode(node):
-                fnode.registerStyleNode(dn)
+                element.registerStyleNode(dn)
 
         def addStyleNode(node):
-            _node = dc(node)
+            print 'addStyleNode(%s)'% node
             #clean node
-            childnodes = _node.children()
-            nodes = ['a', 'p', 'b',]
-            for n in nodes:
-                _node.remove(n)
+            childnodes = node.children()
             stylenode = StyleNode()
-            stylenode.generateStyleNode(_node)
+            stylenode.generateStyleNode(node)
             _stylenode = element.registerStyleNode(stylenode)
             for i in range(len(childnodes)):
                 childnode = _stylenode.getChild(i)
@@ -77,8 +75,10 @@ class SourceParser:
         while not self.stack.empty():
             (node , element) = self.stack.pop()
             #print '.. stylenode: ', _stylenode
+            print 'get: ', (node, element)
+            print 'node.children: ', len(node.children())
+            addDataNode(node, element)
             addStyleNode(node)
-            addDataNode(node)
 
     def _getTag(self, node):
         end = str(node).index('>')
@@ -92,6 +92,7 @@ if __name__ == '__main__':
             <div id='head1'>hello
                 <b id = 'hell'> b1</b>
                 <b id = 'hell'> b1</b>
+                <div id="head2">world</div>
             </div>
         </body>
     </html>
