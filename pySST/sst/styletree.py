@@ -133,7 +133,8 @@ class ElementNode:
         #create dot node 
         res = ''
         res += self.doter.initDotNode() + '\n'
-        for e in self.getChildStyleNodes():
+        for i,e in enumerate(self.getChildStyleNodes()):
+            e.doter.initIndex(self.doter.index+i)
             res += '%s -- %s;\n' % (
                 self.doter.getDotNode(),
                 e.doter.getDotNode() 
@@ -208,9 +209,9 @@ class StyleNode:
     
     def __str__(self):
         res = ''
-        self.doter.init(self)
         res += self.doter.initDotNode() + '\n'
-        for e in self.getChildrenElements():
+        for i,e in enumerate(self.getChildrenElements()):
+            e.doter.initIndex(self.doter.index+i)
             res += '%s -- %s;\n' % (
                 self.doter.getDotNode(),
                 e.doter.getDotNode() 
@@ -330,6 +331,7 @@ class StyleTree:
         '''
         res = str(self.body)
         #print res
+        self.body.doter.initIndex(0)
         self.body.doter.toFile(strr=res)
         return res
 
