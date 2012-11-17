@@ -17,12 +17,18 @@ Created on Nov 11, 2012
 # *  imp is finally calculated value using count
 # *#################################################*/
 #from type import Node
+from doter import ElementNodeDoter, StyleNodeDoter, DataNodeDoter
 import math
 def getTag(node):
     end = str(node).index('>')
-    return str(node)[:end+1]
+    res = str(node)[:end+1]
+    print "** getTag: ", res
+    return res
+
 
 datanodenames = ['a', 'p', 'b',]
+#help to generate a unique name for each node
+print_index = 0
 
 def trim(text):
     return text.lstrip().rstrip()
@@ -53,6 +59,8 @@ class ElementNode:
         self._count = 1
         self._imp = 0
         self.type = 'elementnode'
+        self.doter = ElementNodeDoter()
+        self.doter.init(self)
 
     def setName(self, name):
         self._name =  str(name)
@@ -74,13 +82,7 @@ class ElementNode:
         add text img a p b 
         '''
         nodenames = [
-            'img',
-            'IMG',
-            'P',
-            'p',
-            'b',
-            'B',
-        ]
+            'img', 'IMG', 'P', 'p', 'b', 'B', ]
         datanode = DataNode()
         #use lxml to parse html and get text data
         root = etree.XML( str(node))
@@ -125,14 +127,21 @@ class ElementNode:
             return stylenode
 
     def __str__(self):
-        print 'element str:'
-        res = "[.{%s} " % self.getName()
-        for node in self.getChildStyleNodes():
-            res += str(node)
-            res += " "
-        res += "]"
+        '''
+        use dot to generate structure
+        '''
+        #create dot node 
+        res = ''
+        res += self.doter.initDotNode() + '\n'
+        for e in self.getChildStyleNodes():
+            res += '%s -- %s;\n' % (
+                self.doter.getDotNode(),
+                e.doter.getDotNode() 
+            )
+            res += str(e)
+        #self.doter.incIndex()
         return res
-        
+
 class StyleNode:
     def __init__(self):
         print "construct StyleNode: ",
@@ -141,6 +150,8 @@ class StyleNode:
         self._count = 1
         self._children = []
         self.type = 'stylenode'
+        self.doter = StyleNodeDoter()
+        self.doter.init(self)
 
     def generateStyleNode(self, node):
         '''
@@ -194,19 +205,25 @@ class StyleNode:
 
     def setImp(self, imp):
         self._imp  = imp
-
+    
     def __str__(self):
-        print 'stylenode str:'
-        res = '[.' + "{(%s)}"%self.getPreview()
-        res += " "
-        for element in self.getChildrenElements():
-            res += str(element)
-        res += ']'
+        res = ''
+        self.doter.init(self)
+        res += self.doter.initDotNode() + '\n'
+        for e in self.getChildrenElements():
+            res += '%s -- %s;\n' % (
+                self.doter.getDotNode(),
+                e.doter.getDotNode() 
+            )
+            res += str(e)
+        #self.doter.incIndex()
         return res
 
     def _getTag(self, node):
         end = str(node).index('>')
-        return str(node)[:end+1]
+        res = str(node)[:end+1]
+        print "** tag: ", res
+        return res
 
 from copy import deepcopy as dc
 class DataNode(StyleNode):
@@ -217,6 +234,8 @@ class DataNode(StyleNode):
     def __init__(self, data = ''):
         print '>> construct DataNode'
         StyleNode.__init__(self)
+        self.doter = DataNodeDoter()
+        self.doter.init(self)
 
     def setName(self, data):
         self._name = str(data)
@@ -249,8 +268,10 @@ class DataNode(StyleNode):
         self.setName(hash(str(node)))
 
     def __str__(self):
-        print '.. datanode:'
-        return self.getName()
+        res = ''
+        res += self.doter.initDotNode() + '\n'
+        #self.doter.incIndex()
+        return res
 
 class StyleTree:
     def __init__(self):
@@ -307,8 +328,10 @@ class StyleTree:
         '''
         show structure
         '''
-        print self.body
-
+        res = str(self.body)
+        #print res
+        self.body.doter.toFile(strr=res)
+        return res
 
 if __name__ == '__main__':
     body = ElementNode('body')

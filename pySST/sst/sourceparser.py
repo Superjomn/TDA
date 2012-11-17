@@ -9,10 +9,10 @@ class Stack:
     def __init__(self):
         self.datas = []
     def push(self, data):
-        print '.. push', data
+        #print '.. push', data
         self.datas.append(data)
     def pop(self):
-        print '.. pop'
+        #print '.. pop'
         return self.datas.pop()
     def size(self):
         return len(self.datas)
@@ -48,7 +48,7 @@ class SourceParser:
 
     def parseIter(self):
         def addDataNode(fnode, element):
-            print 'addDataNode'
+            #print 'addDataNode'
             children = fnode.children()
             for i in range(len(children)):
                 child = children.eq(i)
@@ -62,7 +62,7 @@ class SourceParser:
                 element.registerStyleNode(dn)
 
         def addStyleNode(node):
-            print 'addStyleNode(%s)'% node
+            #print 'addStyleNode(%s)'% node
             #clean node
             childnodes = node.children()
             stylenode = StyleNode()
@@ -78,14 +78,14 @@ class SourceParser:
         while not self.stack.empty():
             (node , element) = self.stack.pop()
             #print '.. stylenode: ', _stylenode
-            print 'get: ', (node, element)
-            print 'node.children: ', len(node.children())
             addDataNode(node, element)
             addStyleNode(node)
 
     def _getTag(self, node):
         end = str(node).index('>')
-        return str(node)[:end+1]
+        res = str(node)[:end+1]
+        print 'getTag: ', res
+        return res
 
 
 if __name__ == '__main__':
@@ -96,6 +96,17 @@ if __name__ == '__main__':
                 <b id = 'hell'> b1</b>
                 <b id = 'hell'> b1</b>
                 <div id="head2">world</div>
+                <div id='chun' > 你好
+                    <b>yes</b>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>he</td>
+                                <td>yes</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </body>
     </html>
@@ -105,5 +116,6 @@ if __name__ == '__main__':
     sourceparser = SourceParser()
     sourceparser.setSource(strr)
     sourceparser.parse()
-    sourceparser.styletree.show()
+    res = sourceparser.styletree.show()
+
     
