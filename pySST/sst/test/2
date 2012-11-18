@@ -1,0 +1,9 @@
+<body>
+    <div id='nav'>
+        nav-data
+        <a href='#'>a1</a>
+        <a href='#'>a2</a>
+        <a href='#'>a3</a>
+    </div>
+    body-data
+</body>

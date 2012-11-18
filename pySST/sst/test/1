@@ -1,0 +1,28 @@
+<html>
+    <body>
+        body data 世界
+        <div id='head1'>hello
+            <b id = 'hell'> b1</b>
+            <div id="head2">world</div>
+            <div id='chun' > 你好
+                <div id="hello">
+                    <table>
+                        <tr>
+                            <td>he</td>
+                            <td>yes</td>
+                        </tr>
+                    </table>
+                    <div class="hello">sencond</div>
+                </div>
+                <div class="yes">he</div>
+            </div>
+        </div>
+
+        <div id="nav">
+            <a href=#>hello world</a>
+            <a href=#>hello world</a>
+            <a href=#>hello world</a>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/xiaone.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>校内信息网-今日日程</title>
+<!-- InstanceEndEditable -->
+<link href="../css/layout.css" rel="stylesheet" type="text/css" />
+<link href="../css/item.css" rel="stylesheet" type="text/css" />
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+</head>
+
+<body>
+
+<div id="wrapper">
+  <div id="date"><form name="form1" id="form1" method="post" action="../in/search.php">
+    <div id="search"><span style="float:left;padding-top:5px;"><a href="today.php" target="_blank">今天是<!-- InstanceBeginEditable name="today" -->2012年11月16日 星期五<!-- InstanceEndEditable --></a></span><span class="searchtitle">信息检索</span><span class="sort">按</span> 
+      <select name="sortitem" id="sortitem">
+          <option value="1">标题关键词</option>
+          <option value="2">部门</option>
+        </select>
+      <input name="key" type="text" id="searchinput" size="18" maxlength="20" />
+      <input name="Submit" type="submit" id="searchbutton" value="GO" />
+      </form>
+    </div>
+  </div>
+  <div id="bumen">
+    <div id="zonglan">部门总览</div>
+    <ul>
+      <li><a href="http://www.cau.edu.cn/bgs/index.htm"  target="_blank">党政办公室</a></li>
+	  <div style="clear:both;"></div>
+    </ul>
+    <div id="bumentitle">党务部门</div>
+    <ul>
+      <li><a href="http://www.cau.edu.cn/party/party/"  target="_blank">组织部</a></li>
+      <li><a href="http://news.cau.edu.cn/caunc/"  target="_blank">宣传部</a></li>
+      <li><a href="http://www.cau.edu.cn/jiwei/"  target="_blank">纪检</a></li>
+      <li><a href="http://www.cau.edu.cn/tzb/tzb" target="_blank">统战部</a></li>
+	  <li><a href="http://xsc.cau.edu.cn/" target="_blank">学生工作部</a></li>
+	  <div style="clear:both;"></div>
+    </ul>
+    <div id="bumentitle">政务部门</div>
+    <ul>
+      <li><a href="http://www.cau.edu.cn/fzghc" target="_blank">发展规划处</a></li>
+      <li><a href="http://www.cau.edu.cn/jwc" target="_blank">教务处</a></li>
+      <li><a href="http://kyy.cau.edu.cn/" target="_blank">科研院</a></li>
+      <li><a href="http://www.cau.edu.cn/gradsch/" target="_blank">研究生院</a></li>
+      <li><a href="http://202.205.91.20/cau/personnel_department/"  target="_blank">人事处</a></li>
+      <li class="long"><a href="http://oir.cau.edu.cn" target="_blank">国际交流合作处</a></li>
+	  
+      <li><a href="http://211.82.80.3:8088/" target="_blank">财务处</a></li>
+      <li><a href="http://www.cau.edu.cn/sjs/new/" target="_blank">审计处</a></li>
+      <li><a href="http://www.cau.edu.cn/houqin" target="_blank">后勤基建处</a></li>
+      <li><a href="http://211.82.90.69/" target="_blank">国资处</a></li>
+	  <li class="long"><a href="http://www.cau.edu.cn/cyc/cyc/" target="_blank">校办产业办公室</a></li>
+	  
+      <li><a href="http://www.cau.edu.cn/bwc/bwc_news/index.php" target="_blank">保卫处</a></li>      
+      <li><a href="http://www.cau.edu.cn/lgbc/ltxc/xx/" target="_blank">离退休处</a></li>
+      <li><a href="http://www.cau.edu.cn/tuanwei/" target="_blank">校团委</a></li>
+      <li><a href="http://www.cau.edu.cn/xgh/" target="_blank">工会</a></li>
+	  <div style="clear:both;"></div>
+    </ul>
+    <div id="bumentitle">教辅部门</div>
+    <ul>
+      <li><a href="http://news.cau.edu.cn" target="_blank">新闻中心</a></li>
+      <li><a href="http://www.lib.cau.edu.cn" target="_blank">图书馆</a></li>
+      <li><a href="http://www.cau.edu.cn/caup/" target="_blank">出版社</a></li>
+      <li><a href="http://www.cau.edu.cn/dag/" target="_blank">档案馆</a></li>
+      <li><a href="http://www.cau.edu.cn/netcenter" target="_blank">网络中心</a></li>
+      <li><a href="http://caucc.cau.edu.cn/" target="_blank">计算中心</a></li>
+      <li><a href="http://www.cau.edu.cn/ehospital" target="_blank">校医院</a></li>
+      <li><a href="http://www.cau.edu.cn/xyh/" target="_blank">校友总会</a></li>
+	  <div style="clear:both;"></div>
+    </ul>
+    <div id="zonglan">学院总览</div>
+    <ul id="lower">
+      <li><a href="http://cab.cau.edu.cn" target="_blank">农学与生物技术学院</a></li>
+      <li><a href="http://www.cau.edu.cn/bio" target="_blank">生物学院</a></li>
+      <li><a href="http://www.cau.edu.cn/dongke/" target="_blank">动物科技学院</a></li>
+      <li><a href="http://www.cau.edu.cn/dwyxy/" target="_blank">动物医学院</a></li>
+      <li><a href="http://spxy.cau.edu.cn" target="_blank">食品科学与营养工程学院</a></li>
+      <li><a href="http://www.cau.edu.cn/zihuan" target="_blank">资源与环境学院</a></li>
+      <li><a href="http://211.82.84.11" target="_blank">信息与电气工程学院</a></li>
+      <li><a href="http://coe.cau.edu.cn/" target="_blank">工学院</a></li>
+      <li><a href="http://www.cau.edu.cn/water/" target="_blank">水利与土木工程学院</a></li>
+      <li><a href="http://www.cau.edu.cn/lxy" target="_blank">理学院</a></li>
+      <li><a href="http://www.cau.edu.cn/cem/" target="_blank">经济管理学院</a></li>
+     <li><a href="http://www.cau.edu.cn/cohd/" target="_blank">人文发展学院</a></li>
+      <li><a href="http://icb.cau.edu.cn" target="_blank">国际学院</a></li>
+      <li><a href="http://jjxy.cau.edu.cn/" target="_blank">继续教育学院</a></li>
+	  <li><a href="http://www.cau-edu.net.cn/" target="_blank">（远程教育）</a></li>
+      <li><a href="http://www.cau.edu.cn/tyjxb" target="_blank">体育与艺术教学部</a></li>
+      <li><a href="http://www.cauyt.edu.cn" target="_blank">烟台校区</a></li>
+      <li><a href="http://bjjsdx.cau.edu.cn/" target="_blank">北京建设大学</a></li>
+    </ul>
+  </div>
+  <div id="header"></div>
+  <div id="nav">
+    <ul>
+ <li><a href="../in/index.php">信息网主页</a></li>      
+<li><a href="http://www.cau.edu.cn">学校主页</a></li>
+      <li class="current"><a href="http://news.cau.edu.cn">新闻网</a></li>
+      <li><a href="online.html">网上办事</a></li>
+      <li><a href="today.php">今日日程</a></li>
+    </ul>
+  </div>
+  
+  <!-- InstanceBeginEditable name="EditRegion1" -->
+ <div id="content" style="width:700px;">
+    <div id="bottom">
+    <table width="700" border="0" align="center" cellpadding="2" cellspacing="1"  bgcolor="#CCCCCC">
+      <tbody>
+        <tr bgcolor="#F3EA7A"> 
+          <td height="28" colspan="7" align="middle" class="title0"><div align="center">今天校内活动一览表</div></td>
+        </tr>
+        <tr bgcolor="#FFFFCC" > 
+          <td width="70" height="20" align="middle" bgcolor="#F3EA7A" class="title1">开始时间</td>
+          <td width="200" align="middle" bgcolor="#F3EA7A" class="title1">活动内容</td>
+          <td align="middle" bgcolor="#F3EA7A" class="title1">活动类型</td>
+          <td align="middle" bgcolor="#F3EA7A" class="title1">适用对象</td>
+          <td align="middle" bgcolor="#F3EA7A" class="title1">地点</td>
+          <td align="middle" bgcolor="#F3EA7A" class="title1">主办者</td>
+          <td width="70" align="middle" bgcolor="#F3EA7A" class="title1">结束时间</td>
+        </tr>
+              </tbody>
+    </table>
+	 
+    <table width="700" border="0" align="center" cellpadding="2" cellspacing="1"  bgcolor="#CCCCCC" style="margin-top: 60px;">
+      <tbody>
+        <tr bgcolor="#F8F2AB"> 
+          <td height="28" colspan="7" align="middle" class="title0"> 
+            <div align="center">明天校内活动一览表</div></td>
+        </tr>
+        <tr bgcolor="#F8F2AB" > 
+          <td width="70" height="20" align="middle" class="title1">开始时间</td>
+          <td width="200" align="middle" class="title1">活动内容</td>
+          <td align="middle" class="title1">活动类型</td>
+          <td align="middle" class="title1">适用对象</td>
+          <td align="middle" class="title1">地点</td>
+          <td align="middle" class="title1">主办者</td>
+          <td width="70" align="middle" class="title1">结束时间</td>
+        </tr>
+              </tbody>
+    </table>
+    </div>   
+  </div>
+  <!-- InstanceEndEditable -->
+  <div id="footer"></div>
+</div>
+</body>
+<!-- InstanceEnd --></html>

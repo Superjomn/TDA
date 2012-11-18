@@ -213,13 +213,14 @@ class StyleNode:
         res = ''
         res += self.doter.initDotNode() + '\n'
         for i,e in enumerate(self.getChildrenElements()):
-            e.doter.initIndex(self.doter.index+i)
+            e.doter.initIndex(self.doter.index)
+            e.doter.incIndex()
             res += '%s -- %s;\n' % (
                 self.doter.getDotNode(),
                 e.doter.getDotNode() 
             )
             res += str(e)
-        #self.doter.incIndex()
+        self.doter.incIndex()
         return res
 
     def _getTag(self, node):
@@ -262,7 +263,7 @@ class DataNode(StyleNode):
     def __str__(self):
         res = ''
         res += self.doter.initDotNode() + '\n'
-        #self.doter.incIndex()
+        self.doter.incIndex()
         return res
 
 class StyleTree:
