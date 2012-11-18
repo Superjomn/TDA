@@ -9,18 +9,27 @@ from styletree import getTagName, datanodenames
 class Stack:
     def __init__(self):
         self.datas = []
+
+    def init(self):
+        self.datas = []
+
     def push(self, data):
         print '.. push', data
         self.datas.append(data)
+
     def pop(self):
         #print '.. pop'
         return self.datas.pop()
+
     def size(self):
         return len(self.datas)
+
     def getTop(self):
         return self.datas[-1]
+
     def empty(self):
         return self.size() == 0
+
     def show(self):
         print '-'*50
         print '-'*50
@@ -28,8 +37,6 @@ class Stack:
         for data in self.datas:
             print data
         print '<'*50
-
-        
 
 nodenames = ['a', 'p', 'b',]
 from copy import deepcopy as dc
@@ -50,6 +57,7 @@ class SourceParser:
     def parse(self):
         body = self.pq('body')
         #init node
+        self.stack.init()
         self.stack.push(
             [
                 body,
@@ -114,12 +122,15 @@ if __name__ == '__main__':
     </div>
 </body>
     '''
-    strr = open('./test/3').read()
-    print 'content', len(strr)
-    #strr = open('html').read()
     sourceparser = SourceParser()
-    sourceparser.setSource(strr)
-    sourceparser.parse()
+    for i in range(1,3):
+        strr = open('./test/%d'%i).read()
+        print 'content', len(strr)
+        #strr = open('html').read()
+        sourceparser.setSource(strr)
+        sourceparser.parse()
+    sourceparser.styletree.cal()
     res = sourceparser.styletree.show()
+    
 
     

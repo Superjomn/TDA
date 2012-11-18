@@ -1,281 +1,57 @@
 graph graphname {
--208440369 [label="body"]
--208440369 -- -1609379654;
--1609379654 [label="<div id='wrapper'> ", shape=box]
--1609379654 -- -1420091375;
--1420091375 [label="<div id='wrapper'>"]
--1420091375 -- 1232367438;
-1232367438 [label="<div id='date'> <div id='bumen'> <div id='header'> <div id='nav'> <!-- InstanceBeginEditable name='EditRegion1' --> <div id='content' style='width:700px;'> <!-- InstanceEndEditable --> <div id='footer'> ", shape=box]
-1232367438 -- -1707382360;
--1707382360 [label="<div id='date'>"]
--1707382360 -- -1061391629;
--1061391629 [label="<form name='form1' id='form1' method='post' action='../in/search.php'> ", shape=box]
--1061391629 -- 110199669;
-110199669 [label="<form name='form1' id='form1' method='post' action='../in/search.php'>"]
-110199669 -- -690837324;
--690837324 [label="<div id='search'> ", shape=box]
--690837324 -- 875145582;
-875145582 [label="<div id='search'>"]
-875145582 -- 421210030;
-421210030 [label="<span style='float:left;padding-top:5px;'> <span class='searchtitle'> <span class='sort'> <select name='sortitem' id='sortitem'> <input name='key' type='text' id='searchinput' size='18' maxlength='20' /> <input name='Submit' type='submit' id='searchbutton' value='GO' /> ", shape=box]
-421210030 -- -1585556153;
--1585556153 [label="<span style='float:left;padding-top:5px;'>"]
-421210030 -- 655171815;
-655171815 [label="<span class='searchtitle'>"]
-421210030 -- 1768997160;
-1768997160 [label="<span class='sort'>"]
-421210030 -- -522094871;
--522094871 [label="<select name='sortitem' id='sortitem'>"]
--522094871 -- -1613802198;
--1613802198 [label="<option value='1'> <option value='2'> ", shape=box]
--1613802198 -- -673327152;
--673327152 [label="<option value='1'>"]
--1613802198 -- -960128235;
--960128235 [label="<option value='2'>"]
-421210030 -- 567526513;
-567526513 [label="<input name='key' type='text' id='searchinput' size='18' maxlength='20' />"]
-421210030 -- 1833464482;
-1833464482 [label="<input name='Submit' type='submit' id='searchbutton' value='GO' />"]
-1232367438 -- 374197711;
-374197711 [label="<div id='bumen'>"]
-374197711 -- -206796743;
--206796743 [label="<div id='zonglan'> <ul> <div id='bumentitle'> <ul> <div id='bumentitle'> <ul> <div id='bumentitle'> <ul> <div id='zonglan'> <ul id='lower'> ", shape=box]
--206796743 -- -1702017867;
--1702017867 [label="<div id='zonglan'>"]
--206796743 -- -507462912;
--507462912 [label="<ul>"]
--507462912 -- 318020439;
-318020439 [label="<li> <div style='clear:both;'> ", shape=box]
-318020439 -- -2136613309;
--2136613309 [label="<li>"]
-318020439 -- 1857814200;
-1857814200 [label="<div style='clear:both;'>"]
--206796743 -- 1368270225;
-1368270225 [label="<div id='bumentitle'>"]
--206796743 -- 429154456;
-429154456 [label="<ul>"]
-429154456 -- -1327099039;
--1327099039 [label="<li> <li> <li> <li> <li> <div style='clear:both;'> ", shape=box]
--1327099039 -- -1485545911;
--1485545911 [label="<li>"]
--1327099039 -- -1339920767;
--1339920767 [label="<li>"]
--1327099039 -- -2136613307;
--2136613307 [label="<li>"]
--1327099039 -- -1406233231;
--1406233231 [label="<li>"]
--1327099039 -- -760165947;
--760165947 [label="<li>"]
--1327099039 -- 924857977;
-924857977 [label="<div style='clear:both;'>"]
--206796743 -- -1550249712;
--1550249712 [label="<div id='bumentitle'>"]
--206796743 -- -572775377;
--572775377 [label="<ul>"]
--572775377 -- -683040548;
--683040548 [label="<li> <li> <li> <li> <li> <li class='long'> <li> <li> <li> <li> <li class='long'> <li> <li> <li> <li> <div style='clear:both;'> ", shape=box]
--683040548 -- -2132613186;
--2132613186 [label="<li>"]
--683040548 -- -2137613307;
--2137613307 [label="<li>"]
--683040548 -- -2067300727;
--2067300727 [label="<li>"]
--683040548 -- -34785981;
--34785981 [label="<li>"]
--683040548 -- -764165941;
--764165941 [label="<li>"]
--683040548 -- -1382564133;
--1382564133 [label="<li class='long'>"]
--683040548 -- -2130613198;
--2130613198 [label="<li>"]
--683040548 -- 684593984;
-684593984 [label="<li>"]
--683040548 -- -1419516616;
--1419516616 [label="<li>"]
--683040548 -- -33785869;
--33785869 [label="<li>"]
--683040548 -- -1380564132;
--1380564132 [label="<li class='long'>"]
--683040548 -- -37785973;
--37785973 [label="<li>"]
--683040548 -- -1474545814;
--1474545814 [label="<li>"]
--683040548 -- 2091041525;
-2091041525 [label="<li>"]
--683040548 -- -1410233218;
--1410233218 [label="<li>"]
--683040548 -- 1858814157;
-1858814157 [label="<div style='clear:both;'>"]
--206796743 -- 1703252942;
-1703252942 [label="<div id='bumentitle'>"]
--206796743 -- -572775378;
--572775378 [label="<ul>"]
--572775378 -- 79433883;
-79433883 [label="<li> <li> <li> <li> <li> <li> <li> <li> <div style='clear:both;'> ", shape=box]
-79433883 -- 688593988;
-688593988 [label="<li>"]
-79433883 -- 1436974141;
-1436974141 [label="<li>"]
-79433883 -- -2143613287;
--2143613287 [label="<li>"]
-79433883 -- -1420233314;
--1420233314 [label="<li>"]
-79433883 -- -1407233232;
--1407233232 [label="<li>"]
-79433883 -- -1421516734;
--1421516734 [label="<li>"]
-79433883 -- -2077300691;
--2077300691 [label="<li>"]
-79433883 -- -2066300727;
--2066300727 [label="<li>"]
-79433883 -- 391059135;
-391059135 [label="<div style='clear:both;'>"]
--206796743 -- 547434565;
-547434565 [label="<div id='zonglan'>"]
--206796743 -- -127242139;
--127242139 [label="<ul id='lower'>"]
--127242139 -- 1689618292;
-1689618292 [label="<li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> <li> ", shape=box]
-1689618292 -- -2143521404;
--2143521404 [label="<li>"]
-1689618292 -- -2130613200;
--2130613200 [label="<li>"]
-1689618292 -- -1411233343;
--1411233343 [label="<li>"]
-1689618292 -- 1421065943;
-1421065943 [label="<li>"]
-1689618292 -- 1435974137;
-1435974137 [label="<li>"]
-1689618292 -- -1420233316;
--1420233316 [label="<li>"]
-1689618292 -- -1421516735;
--1421516735 [label="<li>"]
-1689618292 -- 2140445923;
-2140445923 [label="<li>"]
-1689618292 -- 1433974021;
-1433974021 [label="<li>"]
-1689618292 -- 1425065932;
-1425065932 [label="<li>"]
-1689618292 -- -1421516736;
--1421516736 [label="<li>"]
-1689618292 -- 1426065930;
-1426065930 [label="<li>"]
-1689618292 -- -1409233218;
--1409233218 [label="<li>"]
-1689618292 -- -1424516722;
--1424516722 [label="<li>"]
-1689618292 -- -1478545805;
--1478545805 [label="<li>"]
-1689618292 -- -1415516630;
--1415516630 [label="<li>"]
-1689618292 -- -1426516723;
--1426516723 [label="<li>"]
-1689618292 -- -1415516639;
--1415516639 [label="<li>"]
-1232367438 -- 1843567359;
-1843567359 [label="<div id='header'>"]
-1232367438 -- 1269502517;
-1269502517 [label="<div id='nav'>"]
-1269502517 -- -1312952461;
--1312952461 [label="<ul> ", shape=box]
--1312952461 -- 1829601876;
-1829601876 [label="<ul>"]
-1829601876 -- 1887263025;
-1887263025 [label="<li> <li> <li class='current'> <li> <li> ", shape=box]
-1887263025 -- 1272490342;
-1272490342 [label="<li>"]
-1887263025 -- -2068300716;
--2068300716 [label="<li>"]
-1887263025 -- -258657244;
--258657244 [label="<li class='current'>"]
-1887263025 -- -2063300731;
--2063300731 [label="<li>"]
-1887263025 -- 550110372;
-550110372 [label="<li>"]
-1232367438 -- -430501851;
--430501851 [label="<!-- InstanceBeginEditable name='EditRegion1' -->"]
-1232367438 -- -1164467519;
--1164467519 [label="<div id='content' style='width:700px;'>"]
--1164467519 -- -2098392436;
--2098392436 [label="<div id='bottom'> ", shape=box]
--2098392436 -- -975492459;
--975492459 [label="<div id='bottom'>"]
--975492459 -- 591763085;
-591763085 [label="<table width='700' border='0' align='center' cellpadding='2' cellspacing='1' bgcolor='#CCCCCC'> <table width='700' border='0' align='center' cellpadding='2' cellspacing='1' bgcolor='#CCCCCC' style='margin-top: 60px;'> ", shape=box]
-591763085 -- -1563410038;
--1563410038 [label="<table width='700' border='0' align='center' cellpadding='2' cellspacing='1' bgcolor='#CCCCCC'>"]
--1563410038 -- -472842262;
--472842262 [label="<tbody> ", shape=box]
--472842262 -- 1234499208;
-1234499208 [label="<tbody>"]
-1234499208 -- -1535148302;
--1535148302 [label="<tr bgcolor='#F3EA7A'> <tr bgcolor='#FFFFCC'> ", shape=box]
--1535148302 -- -506879786;
--506879786 [label="<tr bgcolor='#F3EA7A'>"]
--506879786 -- 1290084816;
-1290084816 [label="<td height='28' colspan='7' align='middle' class='title0'> ", shape=box]
-1290084816 -- -796904205;
--796904205 [label="<td height='28' colspan='7' align='middle' class='title0'>"]
--796904205 -- 1554906688;
-1554906688 [label="<div align='center'> ", shape=box]
-1554906688 -- 336109155;
-336109155 [label="<div align='center'>"]
--1535148302 -- 1122637754;
-1122637754 [label="<tr bgcolor='#FFFFCC'>"]
-1122637754 -- 625653350;
-625653350 [label="<td width='70' height='20' align='middle' bgcolor='#F3EA7A' class='title1'> <td width='200' align='middle' bgcolor='#F3EA7A' class='title1'> <td align='middle' bgcolor='#F3EA7A' class='title1'> <td align='middle' bgcolor='#F3EA7A' class='title1'> <td align='middle' bgcolor='#F3EA7A' class='title1'> <td align='middle' bgcolor='#F3EA7A' class='title1'> <td width='70' align='middle' bgcolor='#F3EA7A' class='title1'> ", shape=box]
-625653350 -- 1944229307;
-1944229307 [label="<td width='70' height='20' align='middle' bgcolor='#F3EA7A' class='title1'>"]
-625653350 -- -1696474478;
--1696474478 [label="<td width='200' align='middle' bgcolor='#F3EA7A' class='title1'>"]
-625653350 -- -1047207349;
--1047207349 [label="<td align='middle' bgcolor='#F3EA7A' class='title1'>"]
-625653350 -- -308333529;
--308333529 [label="<td align='middle' bgcolor='#F3EA7A' class='title1'>"]
-625653350 -- -308333531;
--308333531 [label="<td align='middle' bgcolor='#F3EA7A' class='title1'>"]
-625653350 -- -1051207373;
--1051207373 [label="<td align='middle' bgcolor='#F3EA7A' class='title1'>"]
-625653350 -- 172360078;
-172360078 [label="<td width='70' align='middle' bgcolor='#F3EA7A' class='title1'>"]
-591763085 -- -549960725;
--549960725 [label="<table width='700' border='0' align='center' cellpadding='2' cellspacing='1' bgcolor='#CCCCCC' style='margin-top: 60px;'>"]
--549960725 -- -1982289992;
--1982289992 [label="<tbody> ", shape=box]
--1982289992 -- -1682879182;
--1682879182 [label="<tbody>"]
--1682879182 -- -50166535;
--50166535 [label="<tr bgcolor='#F8F2AB'> <tr bgcolor='#F8F2AB'> ", shape=box]
--50166535 -- -487923017;
--487923017 [label="<tr bgcolor='#F8F2AB'>"]
--487923017 -- -1496405303;
--1496405303 [label="<td height='28' colspan='7' align='middle' class='title0'> ", shape=box]
--1496405303 -- -178320165;
--178320165 [label="<td height='28' colspan='7' align='middle' class='title0'>"]
--178320165 -- -702779588;
--702779588 [label="<div align='center'> ", shape=box]
--702779588 -- 877146712;
-877146712 [label="<div align='center'>"]
--50166535 -- -498923117;
--498923117 [label="<tr bgcolor='#F8F2AB'>"]
--498923117 -- 1556905757;
-1556905757 [label="<td width='70' height='20' align='middle' class='title1'> <td width='200' align='middle' class='title1'> <td align='middle' class='title1'> <td align='middle' class='title1'> <td align='middle' class='title1'> <td align='middle' class='title1'> <td width='70' align='middle' class='title1'> ", shape=box]
-1556905757 -- 1202216854;
-1202216854 [label="<td width='70' height='20' align='middle' class='title1'>"]
-1556905757 -- 1610845944;
-1610845944 [label="<td width='200' align='middle' class='title1'>"]
-1556905757 -- -1512751225;
--1512751225 [label="<td align='middle' class='title1'>"]
-1556905757 -- 2123148645;
-2123148645 [label="<td align='middle' class='title1'>"]
-1556905757 -- -787371253;
--787371253 [label="<td align='middle' class='title1'>"]
-1556905757 -- 679388765;
-679388765 [label="<td align='middle' class='title1'>"]
-1556905757 -- -1382864298;
--1382864298 [label="<td width='70' align='middle' class='title1'>"]
-1232367438 -- -1855782861;
--1855782861 [label="<!-- InstanceEndEditable -->"]
-1232367438 -- 946555039;
-946555039 [label="<div id='footer'>"]
+464261296 [label="body[1.032973]"]
+464261296 -- 1480363593;
+1480363593 [label="-1610483443_2.000000[1]"]
+464261296 -- 578517909;
+578517909 [label="<div id='head1'> <div id='nav'> _2.000000[0]", shape=box]
+578517909 -- 454113309;
+454113309 [label="<div id='head1'>[1.543969]"]
+454113309 -- -1351951883;
+-1351951883 [label="1705380642_1.000000[1]"]
+454113309 -- -1193232674;
+-1193232674 [label="<div id='head2'> <div id='chun'> _2.000000[1]", shape=box]
+-1193232674 -- -1536890019;
+-1536890019 [label="<div id='head2'>[1.092373]"]
+-1536890019 -- 1836791745;
+1836791745 [label="-1448210855_2.000000[1]"]
+-1193232674 -- 916532646;
+916532646 [label="<div id='chun'>[1.098744]"]
+916532646 -- -934846240;
+-934846240 [label="<div id='hello'> <div class='yes'> _2.000000[1]", shape=box]
+-934846240 -- 1937559238;
+1937559238 [label="<div id='hello'>[1.098751]"]
+1937559238 -- -780250818;
+-780250818 [label="<table> <div class='hello'> _2.000000[1]", shape=box]
+-780250818 -- 1251907946;
+1251907946 [label="<table>[1.098942]"]
+1251907946 -- -915204797;
+-915204797 [label="<tr> _2.000000[1]", shape=box]
+-915204797 -- -578616289;
+-578616289 [label="<tr>[1.098532]"]
+-578616289 -- 774677641;
+774677641 [label="<td> <td> _2.000000[1]", shape=box]
+774677641 -- 65749100;
+65749100 [label="<td>[1.092373]"]
+65749100 -- -1085329859;
+-1085329859 [label="640859999_2.000000[1]"]
+774677641 -- 817129145;
+817129145 [label="<td>[1.092373]"]
+817129145 -- 1062900557;
+1062900557 [label="1126843930_2.000000[1]"]
+-780250818 -- 1633436002;
+1633436002 [label="<div class='hello'>[1.092373]"]
+1633436002 -- -1947937668;
+-1947937668 [label="-717399775_2.000000[1]"]
+-934846240 -- -1395958334;
+-1395958334 [label="<div class='yes'>[1.092373]"]
+-1395958334 -- 2075118729;
+2075118729 [label="640859999_2.000000[1]"]
+454113309 -- -592653172;
+-592653172 [label="340788550_1.000000[1]"]
+578517909 -- 1966311118;
+1966311118 [label="<div id='nav'>[0.445225]"]
+1966311118 -- -1341884369;
+-1341884369 [label="1821802198_1.000000[1]"]
+1966311118 -- 1195387855;
+1195387855 [label="-1141946807_1.000000[1]"]
 }

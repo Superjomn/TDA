@@ -242,6 +242,7 @@ class DataNode(StyleNode):
         self.doter.init(self)
         #text content of a tag
         self._nodedata = ''
+        self.type = 'datanode'
 
     def setName(self, data):
         self._name = str(data)
@@ -270,13 +271,20 @@ class StyleTree:
     def __init__(self):
         self.body = ElementNode('body')
         #num of sitepages
-        self.pageNum = 0
+        self.pageNum = 3
+
+    def cal(self):
+        print '#'*50 
+        print '>>> cal..'
+        self.calCompImp(self.body)
 
     def calNodeImp(self, element):
         '''
         calcuate the node importance
         @ element : ElementNode
         '''
+        print '>'*30
+        print '>>> calNodeImp'
         if element.getImp():
             return element.getImp()
         #else
@@ -296,6 +304,8 @@ class StyleTree:
         calculate the composite importance
         @ node : StyleNode or ElementNode
         '''
+        print '>'*30
+        print '>>> calCompImp'
         r = 0.1
         if node.getImp():
             return node.getImp()
@@ -314,7 +324,10 @@ class StyleTree:
             for element in children:
                 res += self.calCompImp(element)
             res /= k
+        elif node.type == 'datanode':
+            res = 1
         node.setImp(res)
+        print '>>> imp: ', res
         return res
 
     def show(self):

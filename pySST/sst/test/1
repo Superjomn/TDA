@@ -2,9 +2,9 @@
     <body>
         body data 世界
         <div id='head1'>hello
-            <b id = 'hell'> b1</b>
+            <b id = 'hell'> 2</b>
             <div id="head2">world</div>
-            <div id='chun' > 你好
+            <div id='chun' > 
                 <div id="hello">
                     <table>
                         <tr>
@@ -19,7 +19,6 @@
         </div>
 
         <div id="nav">
-            <a href=#>hello world</a>
             <a href=#>hello world</a>
             <a href=#>hello world</a>
         </div>
