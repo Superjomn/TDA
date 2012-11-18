@@ -9,7 +9,7 @@ class Stack:
     def __init__(self):
         self.datas = []
     def push(self, data):
-        #print '.. push', data
+        print '.. push', data
         self.datas.append(data)
     def pop(self):
         #print '.. pop'
@@ -50,15 +50,16 @@ class SourceParser:
         def addDataNode(fnode, element):
             #print 'addDataNode'
             children = fnode.children()
+            print 'fnode.children: ', children
+            dn = DataNode()
             for i in range(len(children)):
                 child = children.eq(i)
                 if getTagName(child) in nodenames:
-                    dn = DataNode()
-                    dn.setTagNode(child)
-                    element.registerStyleNode(dn)
+                    dn.addNodeTag(child)
+                    #element.registerStyleNode(dn)
             #add text node
-            dn = DataNode()
-            if dn.setTextNode(node):
+            dn.addTextNode(node)
+            if dn.closeNode():
                 element.registerStyleNode(dn)
 
         def addStyleNode(node):
@@ -84,34 +85,24 @@ class SourceParser:
     def _getTag(self, node):
         end = str(node).index('>')
         res = str(node)[:end+1]
-        print 'getTag: ', res
+        #print 'getTag: ', res
         return res
 
 
 if __name__ == '__main__':
-    strr = """
-    <html>
-        <body>
-            <div id='head1'>hello
-                <b id = 'hell'> b1</b>
-                <b id = 'hell'> b1</b>
-                <div id="head2">world</div>
-                <div id='chun' > 你好
-                    <b>yes</b>
-                    <div>
-                        <table>
-                            <tr>
-                                <td>he</td>
-                                <td>yes</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </body>
-    </html>
-    """
-    #print 'content', len(content)
+    strr = '''
+<body>
+    body-data
+    <div id='nav'>
+        nav-data
+        <a href='#'>a1</a>
+        <a href='#'>a2</a>
+        <a href='#'>a3</a>
+    </div>
+</body>
+    '''
+    strr = open('./test/2').read()
+    print 'content', len(strr)
     #strr = open('html').read()
     sourceparser = SourceParser()
     sourceparser.setSource(strr)

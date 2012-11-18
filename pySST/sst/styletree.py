@@ -22,7 +22,7 @@ import math
 def getTag(node):
     end = str(node).index('>')
     res = str(node)[:end+1]
-    print "** getTag: ", res
+    #print "** getTag: ", res
     return res
 
 
@@ -53,7 +53,7 @@ class ElementNode:
         ]
     '''
     def __init__(self, name = ''):
-        print ">>> construct ElementNode: %s" % name
+        #print ">>> construct ElementNode: %s" % name
         self._name = name
         self._childStyleNodes = []
         self._count = 1
@@ -118,12 +118,12 @@ class ElementNode:
         node = self._searchStyleNode(stylenode.getPreview())
         if node:
             node.incCount()
-            print '.. return node ', node
+            #print '.. return node ', node
             return node
         else:
             self.addChildStyleNode(stylenode)
-            print '.. return stylenode ', 
-            print str(stylenode)
+            #print '.. return stylenode ', 
+            #print str(stylenode)
             return stylenode
 
     def __str__(self):
@@ -145,7 +145,7 @@ class ElementNode:
 
 class StyleNode:
     def __init__(self):
-        print "construct StyleNode: ",
+        #print "construct StyleNode: ",
         self._preview = ''
         self._imp = 0
         self._count = 1
@@ -166,7 +166,7 @@ class StyleNode:
             if tagname in datanodenames: continue
             #generate ...
             element = ElementNode(self._getTag(childnode))
-            print '.. Element : ',element
+            #print '.. Element : ',element
             self.addChildElement(element)
 
     def getPreview(self):
@@ -223,20 +223,22 @@ class StyleNode:
     def _getTag(self, node):
         end = str(node).index('>')
         res = str(node)[:end+1]
-        print "** tag: ", res
+        #print "** tag: ", res
         return res
 
-from copy import deepcopy as dc
+#from copy import deepcopy as dc
 class DataNode(StyleNode):
     '''
     DataNode is a special StyleNode
     for nodes like b p img a
     '''
     def __init__(self, data = ''):
-        print '>> construct DataNode'
+        #print '>> construct DataNode'
         StyleNode.__init__(self)
         self.doter = DataNodeDoter()
         self.doter.init(self)
+        #text content of a tag
+        self._nodedata = ''
 
     def setName(self, data):
         self._name = str(data)
@@ -247,26 +249,36 @@ class DataNode(StyleNode):
     def getPreview(self):
         return self._name
 
-    def setTextNode(self, node):
+    def addTextNode(self, node):
         '''
         set self as a Text Node
         just save the hash of text content
         '''
         #use lxml to parse html and get text data
+        print 'node:', node
         root = etree.XML( str(node))
         data = root.text
-        if trim(data):
-            self.setName(hash(data))
-            return True
-        return False
-
-    def setTagNode(self, node):
+        res = trim(data)
+        if res:
+            self._nodedata += res
+    
+    def addNodeTag(self, node):
         '''
         set self as a Tag Node 
         like tagnode: img a p b
         just save the hash of whole tag
         '''
-        self.setName(hash(str(node)))
+        res = str(node)
+        res = trim(res)
+        if res:
+            self._nodedata += res
+
+    def closeNode(self):
+        print 'node data: ', self._nodedata
+        if self._nodedata:
+            self.setName(hash(self._nodedata))
+            return True
+        return False
 
     def __str__(self):
         res = ''
