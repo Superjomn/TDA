@@ -88,10 +88,9 @@ class _SourceParser(_UrlParser):
 
 import os.path
 class SourceParser(_SourceParser):
-    def __init__(self):
+    def __init__(self, netlocs):
         _config = Config()
-        _netloc = _config.get('reptile', 'netloc')
-        _SourceParser.__init__(self, [_netloc])
+        _SourceParser.__init__(self, netlocs)
         self._sourcepath = _config.get('path', 'source')
 
     def saveSource(self, key):

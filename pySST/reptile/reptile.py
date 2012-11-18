@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
-import threading  
 import chardet
 import urllib2  
 import StringIO  
 import gzip  
 import string  
-
-
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
 from pyquery import PyQuery as pq
 import xml.dom.minidom as dom
 import socket
@@ -34,10 +30,9 @@ class _Reptile:
         '''
         pass
     def inQueue(self, url):
-        if not self.outPageRange():
-            if self.matchUrl(url):
-                if not self._urlist.find(url):
-                    self._queue.put(url)
+        if not self.outPageRange(): 
+            if self.matchUrl(url) and not self._urlist.find(url):
+                self._queue.put(url)
 
     def outPageRange(self):
         '''
@@ -81,18 +76,27 @@ from sourceparser import SourceParser
 from config import Config
 import random
 import time
+import urlparse
 
 class Reptile(_Reptile):
     '''
     main reptile
     '''
     def __init__(self):
+        print '.. init Reptile'
         _config = Config()
         _Reptile.__init__(self, _config.getint('reptile', 'page_num'))
-        self.netloc = 'news.sina.com.cn'
         self.curPageUrl = ''
-        self._sourceparser = SourceParser()
-        self._queue.put( _config.get('reptile', 'startpage') )
+        startpages =  _config.get('reptile', 'startpage').split()
+        _netlocs = []
+        for url in startpages:
+            self._queue.put(url)
+            _netlocs.append(
+                urlparse.urlparse(url).netloc
+            )
+        print '.. init startpages: ', startpages
+        print '.. init netlocs: ', _netlocs
+        self._sourceparser = SourceParser(_netlocs)
 
     def matchUrl(self, url):
         print 'match url:', url
