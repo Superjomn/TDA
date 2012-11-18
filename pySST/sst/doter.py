@@ -1,3 +1,4 @@
+import random
 #to generate unique name for each node
 class Doter:
     '''
@@ -25,7 +26,7 @@ class Doter:
         return str(hash(node))
 
     def incIndex(self):
-        self.index += 1
+        self.index += random.randint(1, 1000)
 
     def get_name(self):
         return "hello"
