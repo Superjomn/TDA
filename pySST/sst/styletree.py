@@ -115,6 +115,8 @@ class ElementNode:
         return self._count
 
     def registerStyleNode(self, stylenode):
+        if not trim(stylenode.getPreview()):
+            return
         node = self._searchStyleNode(stylenode.getPreview())
         if node:
             node.incCount()
@@ -249,34 +251,11 @@ class DataNode(StyleNode):
     def getPreview(self):
         return self._name
 
-    def addTextNode(self, node):
-        '''
-        set self as a Text Node
-        just save the hash of text content
-        '''
-        #use lxml to parse html and get text data
-        print 'node:', node
-        root = etree.XML( str(node))
-        data = root.text
-        res = trim(data)
-        if res:
-            self._nodedata += res
-    
-    def addNodeTag(self, node):
-        '''
-        set self as a Tag Node 
-        like tagnode: img a p b
-        just save the hash of whole tag
-        '''
-        res = str(node)
-        res = trim(res)
-        if res:
-            self._nodedata += res
-
-    def closeNode(self):
-        print 'node data: ', self._nodedata
-        if self._nodedata:
-            self.setName(hash(self._nodedata))
+    def setData(self, data):
+        if data:
+            res = hash(data)
+            #res = data
+            self.setName(res)
             return True
         return False
 

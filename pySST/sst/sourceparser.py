@@ -4,6 +4,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from pyquery import PyQuery as pq
 from styletree import StyleTree, ElementNode, StyleNode, DataNode
+from styletree import getTagName, datanodenames
 
 class Stack:
     def __init__(self):
@@ -20,10 +21,20 @@ class Stack:
         return self.datas[-1]
     def empty(self):
         return self.size() == 0
+    def show(self):
+        print '-'*50
+        print '-'*50
+        print '*'*20 + '<<stack>>'+'*' *  20
+        for data in self.datas:
+            print data
+        print '<'*50
+
+        
 
 nodenames = ['a', 'p', 'b',]
 from copy import deepcopy as dc
 from styletree import getTagName
+import datatagextractor
 class SourceParser:
     '''
     parse html source and add nodes to styletree
@@ -31,6 +42,7 @@ class SourceParser:
     def __init__(self):
         self.styletree = StyleTree()
         self.stack = Stack()
+        self.datatagextractor = datatagextractor.DatatagExtractor()
 
     def setSource(self, source):
         self.pq = pq(source)
@@ -47,19 +59,16 @@ class SourceParser:
         self.parseIter()
 
     def parseIter(self):
+
         def addDataNode(fnode, element):
             #print 'addDataNode'
             children = fnode.children()
             print 'fnode.children: ', children
             dn = DataNode()
-            for i in range(len(children)):
-                child = children.eq(i)
-                if getTagName(child) in nodenames:
-                    dn.addNodeTag(child)
-                    #element.registerStyleNode(dn)
-            #add text node
-            dn.addTextNode(node)
-            if dn.closeNode():
+            self.datatagextractor.init()
+            self.datatagextractor.feed(str(fnode))
+            res = self.datatagextractor.getData()
+            if dn.setData(res):
                 element.registerStyleNode(dn)
 
         def addStyleNode(node):
@@ -67,14 +76,18 @@ class SourceParser:
             #clean node
             childnodes = node.children()
             stylenode = StyleNode()
+            assert node != None , "addStyleNode(None)"
             stylenode.generateStyleNode(node)
             _stylenode = element.registerStyleNode(stylenode)
-            try:
-                for i in range(len(childnodes)):
-                    childnode = _stylenode.getChild(i)
+            j = -1
+            for i in range(len(childnodes)):
+                child = childnodes.eq(i)
+                tag = getTagName(child)
+                print '** tag:', tag
+                if tag not in datanodenames:
+                    j += 1
+                    childnode = _stylenode.getChild(j)
                     self.stack.push([ childnodes.eq(i), childnode ])
-            except:
-                pass
                 
         while not self.stack.empty():
             (node , element) = self.stack.pop()
@@ -101,7 +114,7 @@ if __name__ == '__main__':
     </div>
 </body>
     '''
-    strr = open('./test/2').read()
+    strr = open('./test/3').read()
     print 'content', len(strr)
     #strr = open('html').read()
     sourceparser = SourceParser()
