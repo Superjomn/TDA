@@ -2,6 +2,7 @@
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
 from pyquery import PyQuery as pq
 import urlparse 
 from config import Config
@@ -42,6 +43,8 @@ class _UrlParser:
         return urlparse.urljoin(curPageUrl, newUrl)
         
 
+import re
+import chardet
 class _SourceParser(_UrlParser):
     '''
     parse html and url
@@ -58,6 +61,25 @@ class _SourceParser(_UrlParser):
 
     def saveSource(self, key):
         pass
+
+    def transcode(self, source):
+        '''
+        转码 自动转化为utf8
+        '''
+        try:
+            res = chardet.detect(source)
+        except:
+            return False
+        confidence = res['confidence']
+        encoding = res['encoding']
+        p = re.compile("&#(\S+);")
+        source = p.sub("",source)
+        if encoding == 'utf-8':
+            return source
+        if confidence < 0.6:
+            return False
+        else:
+            return unicode(source, encoding, 'ignore')
 
     def setCurPageUrl(self, url):
         self._curPageUrl = url
@@ -96,6 +118,9 @@ class SourceParser(_SourceParser):
     def saveSource(self, key):
         print '.. saving ', key
         f = open( self._sourcepath + str(key), 'w')
-        f.write(self.source)
+        f.write(
+            #self.transcode( self.source)
+            self.source
+        )
         f.close()
 

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+sys.path.append('..')
 import chardet
 import urllib2  
 import StringIO  
 import gzip  
 import string  
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 from pyquery import PyQuery as pq
 import xml.dom.minidom as dom
 import socket
@@ -21,7 +23,7 @@ class _Reptile:
         self._urlist = Urlist()
         self._queue = Q.Queue()
         self.pageNum = pageNum
-        self._downloadedPageNum = 0
+        self.downloadedPageNum = 0
 
     def matchUrl(self, url):
         '''
@@ -39,10 +41,10 @@ class _Reptile:
         num of downloaded page is outof range?
         return true/false
         '''
-        return self.pageNum < self._downloadedPageNum
+        return self.pageNum < self.downloadedPageNum
 
     def requestSource(self, url):
-        self.pageNum += 1
+        self.downloadedPageNum += 1
         self.opener = urllib2.build_opener()     
         request = urllib2.Request(url) 
         request.add_header('Accept-encoding', 'gzip')
@@ -117,7 +119,7 @@ class Reptile(_Reptile):
                 continue
             print '.. get: source length ', len(_source)
             self._sourceparser.setSource(_source)
-            self._sourceparser.saveSource(self.pageNum)
+            self._sourceparser.saveSource(self.downloadedPageNum)
             _absurls = self._sourceparser.getAbsUrls()
             for url in _absurls:
                 self.inQueue(url)

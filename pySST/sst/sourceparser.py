@@ -4,7 +4,17 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from pyquery import PyQuery as pq
 from styletree import StyleTree, ElementNode, StyleNode, DataNode
-from styletree import getTagName, datanodenames
+from styletree import getTagName
+import wordsplit
+from dic.dic import Dic
+from dic.nodedatas import Datas
+
+nodenames = ['a', 'img']
+#<img/>hello
+#nodes that don't contain text
+specialnodes = ['img']
+#useless nodes
+wildnodes = ['script', 'style']
 
 class Stack:
     def __init__(self):
@@ -14,7 +24,7 @@ class Stack:
         self.datas = []
 
     def push(self, data):
-        print '.. push', data
+        #print '.. push', data
         self.datas.append(data)
 
     def pop(self):
@@ -28,7 +38,7 @@ class Stack:
         return self.datas[-1]
 
     def empty(self):
-        return self.size() == 0
+        return not bool(self.datas)
 
     def show(self):
         print '-'*50
@@ -38,9 +48,6 @@ class Stack:
             print data
         print '<'*50
 
-nodenames = ['a', 'p', 'b',]
-from copy import deepcopy as dc
-from styletree import getTagName
 import datatagextractor
 class SourceParser:
     '''
@@ -50,6 +57,9 @@ class SourceParser:
         self.styletree = StyleTree()
         self.stack = Stack()
         self.datatagextractor = datatagextractor.DatatagExtractor()
+        # centra dic
+        self.dic = Dic()
+        self.dic.fromfile()
 
     def setSource(self, source):
         self.pq = pq(source)
@@ -69,15 +79,45 @@ class SourceParser:
     def parseIter(self):
 
         def addDataNode(fnode, element):
+            '''
+            add datanodes
+            first build a data container (DataNode)
+            then for each data, create a Data and register in DataNode
+            '''
             #print 'addDataNode'
             children = fnode.children()
-            print 'fnode.children: ', children
-            dn = DataNode()
+            #print 'fnode.children: ', children
+            #dics
+            dn = element.getDataNode()
+            pagedic = Datas()
+            pagedic.setDic(self.dic)
+
             self.datatagextractor.init()
             self.datatagextractor.feed(str(fnode))
             res = self.datatagextractor.getData()
-            if dn.setData(res):
-                element.registerStyleNode(dn)
+            #for each data add to DataNode
+            for data in res:
+                '''
+                tag text
+                if text: split word
+                '''
+                if data:
+                    if data[0] == '<':
+                        '''
+                        a tag
+                        '''
+                        #dn.registerData(data)
+                        pagedic.addFeatures([data])
+                        dn.datadic.add(data)
+                    else:
+                        words = wordsplit.split(data)
+                        pagedic.addFeatures(words)
+                        for word in words:
+                            #print '>>> split get word: ', word
+                            dn.datadic.add(data)
+            # add a page of features to DataNode
+            dn.addPage(pagedic)
+            dn.datadic.done()
 
         def addStyleNode(node):
             #print 'addStyleNode(%s)'% node
@@ -91,8 +131,8 @@ class SourceParser:
             for i in range(len(childnodes)):
                 child = childnodes.eq(i)
                 tag = getTagName(child)
-                print '** tag:', tag
-                if tag not in datanodenames:
+                #print '** tag:', tag
+                if tag not in nodenames:
                     j += 1
                     childnode = _stylenode.getChild(j)
                     self.stack.push([ childnodes.eq(i), childnode ])
@@ -129,7 +169,7 @@ if __name__ == '__main__':
         #strr = open('html').read()
         sourceparser.setSource(strr)
         sourceparser.parse()
-    sourceparser.styletree.cal()
+    #sourceparser.styletree.cal()
     res = sourceparser.styletree.show()
     
 

@@ -1,8 +1,13 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 2011-5-7
 
 @author: chunwei
 '''
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+sys.path.append('..')
 class Urlist(list):
     'the runtime list for all the url list'
     def find(self, url):  

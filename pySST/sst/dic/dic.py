@@ -28,12 +28,16 @@ class _CArray:
         just add to array
         '''
         #check space
+        data = hash(data)
         self.needAddSpace()
         self.index += 1
         self.datas[self.index] = data
 
-    def toFile(self, filename='features.dic'):
+    def tofile(self, filename='features.dic'):
         self.datas.tofile(filename)
+
+    def fromfile(self, filename='features.dic'):
+        self.datas = np.fromfile(filename, dtype=np.int32)
 
     def show(self):
         print 'size - space : %d - %d' % (self.size(), self.space)

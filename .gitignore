@@ -12,3 +12,4 @@
 .project
 .sconsign.dblite
 *build*
+jieba/

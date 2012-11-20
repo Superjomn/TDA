@@ -26,10 +26,17 @@ class Datas:
     def setDic(self, dic):
         self.dic = dic
 
+    def add(self, feature):
+        self.list.add(feature)
+
     def addFeatures(self, features):
         for feature in features:
             i = self.dic.find(feature)
+            print '>>> dic: %d', i
             self.list.add(i)
+        self.list.done()
+
+    def done(self):
         self.list.done()
 
     def getDatas(self):

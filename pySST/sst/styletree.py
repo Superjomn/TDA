@@ -17,6 +17,10 @@ Created on Nov 11, 2012
 # *  imp is finally calculated value using count
 # *#################################################*/
 #from type import Node
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from doter import ElementNodeDoter, StyleNodeDoter, DataNodeDoter
 import math
 def getTag(node):
@@ -25,8 +29,8 @@ def getTag(node):
     #print "** getTag: ", res
     return res
 
-
-datanodenames = ['a', 'p', 'b',]
+#from sourceparser import nodenames 
+nodenames = ['a', 'img']
 #help to generate a unique name for each node
 print_index = 0
 
@@ -40,7 +44,6 @@ def getTagName(node):
     if res: return res
     return False
 
-from lxml import etree
 class ElementNode:
     '''
     base tag class
@@ -61,6 +64,8 @@ class ElementNode:
         self.type = 'elementnode'
         self.doter = ElementNodeDoter()
         self.doter.init(self)
+        #set DataNode default pos 0
+        self._childStyleNodes.append(DataNode())
 
     def setName(self, name):
         self._name =  str(name)
@@ -69,7 +74,12 @@ class ElementNode:
         return self._name
 
     def getChildStyleNodes(self):
+        # maybe should return _childStyleNodes[1:]
         return self._childStyleNodes
+
+    def getDataNode(self):
+        #default: the first element is DataNode
+        return self._childStyleNodes[0]
 
     def getImp(self):
         return self._imp
@@ -77,22 +87,6 @@ class ElementNode:
     def setImp(self, imp):
         self._imp = imp
 
-    def addDataNode(self, node):
-        '''
-        add text img a p b 
-        '''
-        nodenames = [
-            'img', 'IMG', 'P', 'p', 'b', 'B', ]
-        datanode = DataNode()
-        #use lxml to parse html and get text data
-        root = etree.XML( str(node))
-        tagname = root.tag
-        if tagname in nodenames:
-            datanode.setTagNode(node)
-            self.addChildStyleNode(datanode)
-        elif datanode.setTextNode(node):
-            self.addChildStyleNode(datanode)
-        
     def addChildStyleNode(self, node):
         '''
         @ node : StyleNode
@@ -100,7 +94,8 @@ class ElementNode:
         self._childStyleNodes.append(node)
 
     def _searchStyleNode(self, stylenodename):
-        for node in self.getChildStyleNodes():
+        #skip DataNode defaut first pos
+        for node in self.getChildStyleNodes()[1:]:
             if node.getPreview() == stylenodename:
                 return node
         return False
@@ -145,6 +140,9 @@ class ElementNode:
         #self.doter.incIndex()
         return res
 
+
+
+
 class StyleNode:
     def __init__(self):
         #print "construct StyleNode: ",
@@ -165,7 +163,7 @@ class StyleNode:
             childnode = childnodes.eq(i)
             #skip data nodes
             tagname = getTagName(childnode)
-            if tagname in datanodenames: continue
+            if tagname in nodenames: continue
             #generate ...
             element = ElementNode(self._getTag(childnode))
             #print '.. Element : ',element
@@ -229,43 +227,87 @@ class StyleNode:
         #print "** tag: ", res
         return res
 
+
+
+from dic.nodedatas import Datas
+import numpy as np
 #from copy import deepcopy as dc
-class DataNode(StyleNode):
+class DataNode:
     '''
     DataNode is a special StyleNode
-    for nodes like b p img a
+    a container for nodes like b p img a and text
     '''
-    def __init__(self, data = ''):
+    def __init__(self):
         #print '>> construct DataNode'
-        StyleNode.__init__(self)
         self.doter = DataNodeDoter()
         self.doter.init(self)
         #text content of a tag
-        self._nodedata = ''
         self.type = 'datanode'
+        self.setName('datas')
+        #data dic
+        self.datadic = Datas()
+        #data container for each page
+        self.pagedatas = []
+        self._imp = 0
+
+    def addPage(self, page):
+        self.pagedatas.append(page)
 
     def setName(self, data):
         self._name = str(data)
 
+    def hasData(self):
+        return bool(self.datas)
+
     def getName(self):
         return self._name
 
-    def getPreview(self):
-        return self._name
+    def cal(self):
+        pagenum = len(self.pagedatas)
+        m = np.size(self.datadic)
 
-    def setData(self, data):
-        if data:
-            res = hash(data)
-            #res = data
-            self.setName(res)
-            return True
-        return False
+        def P(i):
+            n = 0
+            data_index = self.datadic[i]
+            for page in self.pagedatas:
+                res = np.where( page == data_index )
+                if res[0]:
+                    n += 1
+            return n / pagenum
+
+        def H(i):
+            res = 0
+            for i in range(m):
+                pi = P(i)
+                res -= pi * math.log( m, pi)
+            return res
+
+        if m ==1: return 1
+        res = sum(
+            [H(i) for i in range(m)]
+        )
+        res = 1 - res / m
+        self._imp = res
+        return res
+
+    def getImp(self):
+        return self._imp
+
+    def _addData(self, data):
+        self.datas.append(data)
+        self.nums.append(1)
+
+    def _incNum(self, pos):
+        self.nums[pos] += 1
 
     def __str__(self):
         res = ''
         res += self.doter.initDotNode() + '\n'
         self.doter.incIndex()
         return res
+
+
+
 
 class StyleTree:
     def __init__(self):
@@ -325,7 +367,7 @@ class StyleTree:
                 res += self.calCompImp(element)
             res /= k
         elif node.type == 'datanode':
-            res = 1
+            res = node.cal()
         node.setImp(res)
         print '>>> imp: ', res
         return res
@@ -341,6 +383,7 @@ class StyleTree:
         return res
 
 if __name__ == '__main__':
+    '''
     body = ElementNode('body')
     stylenode = StyleNode()
     p = ElementNode('p')
@@ -356,3 +399,18 @@ if __name__ == '__main__':
     stylenode2.addChildElement(c)
     b.registerStyleNode(stylenode2)
     print 'body', body
+    '''
+    
+    print '-'*50
+    print '-'*50
+    print '-'*50
+    '''
+    dn = DataNode()
+    print dn.datas
+    print dn.nums
+    '''
+
+
+
+
+

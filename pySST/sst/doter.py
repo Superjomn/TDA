@@ -26,13 +26,14 @@ class Doter:
         return str(hash(node))
 
     def incIndex(self):
-        self.index += random.randint(1, 1000)
+        self.index += random.randint(1, 100000)
 
     def get_name(self):
         return "hello"
 
     def toFile(self, filename='tem.dot', strr=''):
         res = 'graph graphname {\n'
+        res += 'graph [ dpi = 300 ];\n' 
         res += strr 
         res += '}\n'
         open(filename, 'w').write(res)
@@ -52,7 +53,7 @@ class StyleNodeDoter(Doter):
         Doter.__init__(self)
 
     def initDotNode(self):
-        return '%s [label="%s", shape=box]' % (
+        return '%s [label="%s", shape=box, style=filled, color=lightblue]' % (
             self.getDotNode(),
             self.get_name()
         )
@@ -68,11 +69,18 @@ class DataNodeDoter(Doter):
     def __init__(self):
         Doter.__init__(self)
 
+    def initDotNode(self):
+        return '%s [label="%s",style=filled, color=".7 .3 1.0"]' % (
+            self.getDotNode(),
+            self.get_name()
+        )
+
     def get_name(self):
         res = self.node.getName()
         res = res.replace('"', "'")
-        res += "_%f" % self.node.getCount()
         res += '[%d]' % self.node.getImp()
+        #res += "_%f" % self.node.getCount()
+        #res += '[%d]' % self.node.getImp()
         return res
         
 
