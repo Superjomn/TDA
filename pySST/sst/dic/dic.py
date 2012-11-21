@@ -1,4 +1,10 @@
 import  numpy as np 
+
+def trim(text):
+    if type(text) == type(''):
+        return text.lstrip().rstrip()
+    return text
+
 class _CArray:
     def __init__(self):
         self.space = 500
@@ -35,13 +41,22 @@ class _CArray:
 
     def tofile(self, filename='features.dic'):
         self.datas.tofile(filename)
+        #save some meta data
+        data =  "%d#%d" % (self.index, self.space)
+        print 'dic save:', data
+        open('sizeof_' + filename, 'w').write( data )
 
     def fromfile(self, filename='features.dic'):
         self.datas = np.fromfile(filename, dtype=np.int32)
+        res = open('sizeof_' + filename).read()
+        (self.index, self.space) = [int(i) for i in res.split('#')]
 
     def show(self):
         print 'size - space : %d - %d' % (self.size(), self.space)
         print 'data: ', self.datas
+
+    def __str__(self):
+        return str(self.datas)
 
 class Dic(_CArray):
     def __init__(self):
@@ -58,11 +73,14 @@ class Dic(_CArray):
             self.dump()
 
     def find(self, word):
-        data = hash(word)
+        print '.. finding %s' % word
+        data = hash(trim(word))
+        print '.. data hash: %s' % data
         return np.where( self.datas == data )[0][0]
         
 
     def add(self, data):
+        data = trim(data)
         _CArray.add(self, data)
         self.accumulate()
 
@@ -82,6 +100,7 @@ class Dic(_CArray):
         '''
         self.dump()
         self.datas[:self.size()].sort()
+
 
 if __name__ == '__main__':
     '''

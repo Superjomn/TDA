@@ -45,7 +45,8 @@ class ElementNodeDoter(Doter):
     def get_name(self):
         res = self.node.getName()
         res = res.replace('"', "'")
-        res += '[%f]' % self.node.getImp()
+        res += '{%f-%f}' % (self.node.getP(), self.node.getNodeImp())
+        res += '[%f]' % self.node.getCompImp()
         return res
 
 class StyleNodeDoter(Doter):
@@ -61,8 +62,8 @@ class StyleNodeDoter(Doter):
     def get_name(self):
         res = self.node.getPreview()
         res = res.replace('"', "'")
-        res += "_%f" % self.node.getCount()
-        res += '[%d]' % self.node.getImp()
+        res += "_%d" % self.node.getCount()
+        res += '[%f]' % self.node.getCompImp()
         return res
 
 class DataNodeDoter(Doter):
@@ -78,12 +79,16 @@ class DataNodeDoter(Doter):
     def get_name(self):
         res = self.node.getName()
         res = res.replace('"', "'")
-        res += '[%d]' % self.node.getImp()
-        #res += "_%f" % self.node.getCount()
-        #res += '[%d]' % self.node.getImp()
+        res += '{%d}' % self.node.datadic.size()
+        res += '[%f]' % self.node.getCompImp()
+        '''
+        tem = ''
+        for s in self.node.pagedatas:
+            tem += str(s)
+        res += 'L:%s' % tem +  str(self.node.datadic)
+        '''
         return res
         
-
     
 if __name__ == '__main__':
     doter = Doter()

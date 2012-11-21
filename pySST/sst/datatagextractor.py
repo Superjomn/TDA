@@ -2,170 +2,108 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-import htmllib
-import formatter
-import string 
-import sys,urllib
-import time
-
-from sourceparser import Stack 
+from pyquery import PyQuery as pq
 from sourceparser import nodenames, specialnodes, wildnodes
-from styletree import trim
+from styletree import trim, getTagName
 import wordsplit 
 
-class DatatagExtractor(htmllib.HTMLParser):
+class DatatagExtractor:
     '''
-    pass in a node
-    and get the text of first tag
-    and some special nodes like p b img and so on
-    split text to words and treate special node as a word
+    pass in a node and return it's direct children features
     '''
-    def __init__(self, verbose=0):
-        f = formatter.NullFormatter()
-        htmllib.HTMLParser.__init__(self, f, verbose)     
-        self._stack = Stack()
-        self.tagdataflag = False
-        self.tagskipflag = False
-        self._splitf = '||#'
+    def __ini__(self):
+        self.source = ""
+
+    def setNode(self, node):
+        self.source = str(node)
+        if trim(self.source):
+            tag = getTagName(self.source)
+            if not tag: return
+            self.root = pq(self.source)(tag)
+            #clean source
+            self.root.remove('script')
+            self.root.remove('style')
+            return True
+        return False
+
+    def getFeatures(self):  
+        def searchAdd(list, data):
+            if data in list:
+                return
+            list.append(data)
+            
+        children = self.root.children()
         
-    def init(self):
-        self.datas = []
-        self.data = ""
-        
-    def unknown_tag(self):
-        pass
-        
-    def unknown_starttag(self,tag, attrs):
-        #print '>> unknown_starttag !!!', tag
-        self.handle_starttag(tag, None, attrs)
-        
-    def unknown_endtag(self,tag):
-        self.handle_endtag(tag, None)
+        containtags = []
+        for i in range(len(children)):
+            child = children.eq(i)
+            _tag = getTagName(child)
+            #print '_tag: ', _tag
+            if _tag: searchAdd(containtags, _tag)
+            if _tag in nodenames:
+                #add special tag nodes as feature
+                data = str(child)
+                #fix pq bug: mistakenly treat "<img>hello" as a node
+                #split tag and text data
+                _end = data.rfind('>')
+                yield trim(data[:_end+1])
+                _res = trim(data[_end+1:])
+                if _res: yield _res
+        #print 'containtags: ', containtags
 
-    def handle_data(self,data):
-        #print '>> handle_data', data
-        #self._stack.show()
-        if self.tagskipflag: return
-        if self.tagdataflag:
-            self.data += trim(data)
+        #remove all tags
+        print 'containtags', containtags
+        for t in containtags: self.root.remove(t)
+        #words as features
+        text = self.root.text()
+        for word in [trim(w) for w in wordsplit.split(text)]:
+            if word: yield word
 
-    def handle_starttag(self,tag, method, attrs):
-        '''
-        push in a node  and return it's direct children's text data
-        '''
-        # only care data from body
-        print '>> handle tag:', tag
-        print 'stack size: %d' % self._stack.size()
-        '''
-        if self._stack.empty():
-            if tag == 'body':
-                self._stack.push(tag)
-            else: return
-        '''
-        if tag in wildnodes: 
-            self.tagskipflag = True
-            return
-        if self._stack.size() == 1 and tag in nodenames:
-            #direct child
-            #tag data
-            self.tagdataflag = True
-            #<img/> hello world
-            if tag in specialnodes:
-                self.tagdataflag = False
-            starttag = self._splitf + '<' + tag
-            for a in attrs:
-                starttag += str(a)
-            starttag += '>'
-            self.data += starttag
-        self._stack.push(tag)
-        
-    def handle_endtag(self,tag, method):
-        #print '>> handle_endtag', tag
-        #self._stack.show()
-        if self._stack.empty(): return
-        if tag in wildnodes:
-            self.tagskipflag = False
-            return
-        self._stack.pop()
-        if tag in nodenames:
-            self.tagdataflag = False
-           
-    def getData(self):
-        return self.data.split( self._splitf)
-
-    def getFeatures(self):
-        for data in self.getData():
-            '''
-            tag text
-            if text: split word
-            '''
-            if data:
-                if data[0] == '<':
-                    '''
-                    a tag
-                    '''
-                    #dn.registerData(data)
-                    yield data
-                else:
-                    words = wordsplit.split(data)
-                    for word in words:
-                        yield word
-
-
-
-
-class FeatureExtrator(DatatagExtractor):
+class FeatureExtrator:
     '''
-    extractor all features from a html file
+    pass in a html file and return all it's features
     '''
     def __init__(self):
-        DatatagExtractor.__init__(self)
-
-    def fromfile(self, filename):
-        c = open(filename).read()
-        self.init()
-        self.feed(c)
+        self.source = ""
 
     def setSource(self, source):
-        self.init()
-        self.feed(source)
+        self.source = source
+        if trim(self.source):
+            self.root = pq(self.source)('body')
+            #clean source
+            self.root.remove('script')
+            self.root.remove('style')
+            return True
+        return False
+        
+    def getFeatures(self):  
+        def searchAdd(self, list, data):
+            if data in list:
+                return
+            list.append(data)
+        #some tag nodes
+        for tag in nodenames:
+            tags = self.root(tag)
+            for i in range(len(tags)):
+                #fix pq bug: mistakenly treat "<img>hello" as a node
+                #split tag and text data
+                data = str(tags.eq(i))
+                _end = data.rfind('>')
+                #tag
+                yield trim(data[:_end+1])
+                #remaining text
+                _res = trim(data[_end+1:])
+                if _res:
+                    for w in [trim(word) for word in wordsplit.split(_res)]:
+                        if w: yield w
+            #remove tags
+            self.root.remove(tag)
+        #words as features
+        text = self.root.text()
+        for word in [trim(w)  for w in wordsplit.split(text)]:
+            if word: yield word
 
-    def handle_starttag(self,tag, method, attrs):
-        print '>> handle tag:', tag
-        if tag in wildnodes: 
-            self.tagskipflag = True
-            return
-        if self._stack.empty():
-            if tag == 'body':
-                self._stack.push(tag)
-            else: return
-        if tag in nodenames:
-            #tag data
-            self.tagdataflag = True
-            if tag == 'img':
-                self.tagdataflag = False
-            starttag = self._splitf + '<' + tag
-            for a in attrs:
-                starttag += str(a)
-            starttag += '>'
-            self.data += starttag
-        self._stack.push(tag)
 
-    def handle_endtag(self,tag, method):
-        if self._stack.empty(): return
-        if tag in wildnodes:
-            self.tagskipflag = False
-            return
-        self._stack.pop()
-        if tag in nodenames:
-            self.tagdataflag = False
-
-    def handle_data(self,data):
-        if self.tagskipflag or self._stack.empty(): return
-        if self.tagdataflag:
-            self.data += trim(data)
-        else:
-            self.data += self._splitf + trim(data)
 
 if __name__ == '__main__':
     strr = '''
@@ -178,13 +116,12 @@ if __name__ == '__main__':
             <img src='hello'/>after img
             <script src="hello">alert('ehllo'); </script>
         </div>
-
     '''
     print strr
+    print 'tagname: %s' % getTagName(strr)
     d = DatatagExtractor()
-    d.init()
     #strr = open('./test/2').read()
-    d.feed(strr)
+    d.setNode(strr)
     data = d.getFeatures()
     for da in data:
         print da
@@ -211,8 +148,7 @@ if __name__ == '__main__':
     print strr
 
     featureextrator = FeatureExtrator()
-    featureextrator.init()
-    featureextrator.feed(strr)
+    featureextrator.setSource(strr)
     datas = featureextrator.getFeatures()
     for d in datas:
         print d

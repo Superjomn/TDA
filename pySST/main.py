@@ -16,10 +16,11 @@ class CentreDicBuilder:
 
     def buildPath(self):
         basepath = self.config.get('path', 'source')
-        for path in os.listdir(basepath):
-            yield basepath + path
+        return [basepath + path for path in os.listdir(basepath)]
 
     def run(self):
+        #log
+        open('CentreDicBuilder.log', 'w').write(' ')
         fi = open('CentreDicBuilder.log', 'a')
         for path in self.buildPath():
             c = open(path).read()
@@ -42,17 +43,23 @@ def createCentreDic():
 
 from sst.sourceparser import SourceParser
 
-def createStyletree():
-    sourceparser = SourceParser()
+def createStyletree():  
+    #dic
+    dic = Dic()
+    dic.fromfile()
+
+    sourceparser = SourceParser(dic)
     centre = CentreDicBuilder()
-    for path in centre.buildPath():
+    paths = centre.buildPath()
+    sourceparser.setPagenum(len(paths))
+    for path in paths:
         c = open(path).read()
         sourceparser.setSource(c)
         sourceparser.parse()
-    #sourceparser.styletree.cal()
+    sourceparser.styletree.cal()
     res = sourceparser.styletree.show()
 
-#createCentreDic()
+createCentreDic()
 createStyletree()
 
     

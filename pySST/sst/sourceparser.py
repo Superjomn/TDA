@@ -53,8 +53,8 @@ class SourceParser:
     '''
     parse html source and add nodes to styletree
     '''
-    def __init__(self):
-        self.styletree = StyleTree()
+    def __init__(self, dic):
+        self.styletree = StyleTree(dic)
         self.stack = Stack()
         self.datatagextractor = datatagextractor.DatatagExtractor()
         # centra dic
@@ -63,6 +63,9 @@ class SourceParser:
 
     def setSource(self, source):
         self.pq = pq(source)
+
+    def setPagenum(self, num):
+        self.styletree.setPagenum(num)
 
     def parse(self):
         body = self.pq('body')
@@ -89,41 +92,16 @@ class SourceParser:
             #print 'fnode.children: ', children
             #dics
             dn = element.getDataNode()
-            pagedic = Datas()
-            pagedic.setDic(self.dic)
-
-            self.datatagextractor.init()
-            self.datatagextractor.feed(str(fnode))
-            res = self.datatagextractor.getData()
+            self.datatagextractor.setNode(str(fnode))
+            features = self.datatagextractor.getFeatures()
             #for each data add to DataNode
-            for data in res:
-                '''
-                tag text
-                if text: split word
-                '''
-                if data:
-                    if data[0] == '<':
-                        '''
-                        a tag
-                        '''
-                        #dn.registerData(data)
-                        pagedic.addFeatures([data])
-                        dn.datadic.add(data)
-                    else:
-                        words = wordsplit.split(data)
-                        pagedic.addFeatures(words)
-                        for word in words:
-                            #print '>>> split get word: ', word
-                            dn.datadic.add(data)
-            # add a page of features to DataNode
-            dn.addPage(pagedic)
-            dn.datadic.done()
+            dn.addFeatures(features)
 
         def addStyleNode(node):
             #print 'addStyleNode(%s)'% node
             #clean node
             childnodes = node.children()
-            stylenode = StyleNode()
+            stylenode = StyleNode(self.dic)
             assert node != None , "addStyleNode(None)"
             stylenode.generateStyleNode(node)
             _stylenode = element.registerStyleNode(stylenode)
