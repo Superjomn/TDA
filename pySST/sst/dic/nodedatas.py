@@ -14,7 +14,7 @@ class _List(Dic):
 
     def close(self):
         self.done()
-        #np.resize(self.datas, self.size())
+        self.datas = np.resize(self.datas, self.size())
 
 
 class Datas:
@@ -40,7 +40,7 @@ class Datas:
                 self.list.add(i)
             except:
                 print "!!!! wrong finding !!!!!"
-        self.list.done()
+        self.done()
         print 'list: ', self.list.datas
 
     def hasData(self):

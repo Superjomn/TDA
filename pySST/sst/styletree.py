@@ -20,6 +20,7 @@ Created on Nov 11, 2012
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
 import math
 
 pageNum = 6
@@ -353,25 +354,27 @@ class DataNode:
             data_index = self.datadic[i]
             print 'data_index: ', data_index
 
+            li = []
             for page in self.pagedatas:
                 print 'find pageindex in page', data_index, page.list.datas
                 res = np.where(page.list.datas == data_index )
                 print 'find res:', res
                 try:
                     i = res[0][0]
-                    n += 1
+                    li.append(1)
                 except:
+                    li.append(0)
                     pass
+            n = sum(li)
             print 'n, m : %d, %d' %  (n, m)
-            return n / m
+            return [i/n for i in li]
 
         def H(i):
+            if m == 1: return 0
             res = 0
-            for i in range(m):
-                pi = P(i)
-                print 'pi', pi
-                if not pi: return 0
-                res -= pi * math.log( pi, m)
+            for p in P(i):
+                if not p: continue
+                res -= p * math.log(p, m)
             return res
 
         if m ==1: return 1
@@ -379,7 +382,7 @@ class DataNode:
             [H(i) for i in range(l)]
         )
         #res = 1 - res / l
-        res = res/l
+        res = 1 - res/l
         self._imp = res
         print 'H(i): ', self._imp
         return res
