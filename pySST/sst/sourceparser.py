@@ -63,6 +63,10 @@ class SourceParser:
 
     def setSource(self, source):
         self.pq = pq(source)
+        '''
+        self.pq.remove('script')
+        self.pq.remove('style')
+        '''
 
     def setPagenum(self, num):
         self.styletree.setPagenum(num)

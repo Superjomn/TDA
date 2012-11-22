@@ -26,7 +26,7 @@ class _CArray:
         '''
         if self.size() == self.space:
             self.space += self.peradd
-            print 'size - space: %d - %d'% (self.size(), self.space)
+            #print 'size - space: %d - %d'% (self.size(), self.space)
             self.datas = np.resize(self.datas, self.space)
 
     def add(self, data):
@@ -43,7 +43,7 @@ class _CArray:
         self.datas.tofile(filename)
         #save some meta data
         data =  "%d#%d" % (self.index, self.space)
-        print 'dic save:', data
+        #print 'dic save:', data
         open('sizeof_' + filename, 'w').write( data )
 
     def fromfile(self, filename='features.dic'):
@@ -73,9 +73,9 @@ class Dic(_CArray):
             self.dump()
 
     def find(self, word):
-        print '.. finding %s' % word
+        #print '.. finding %s' % word
         data = hash(trim(word))
-        print '.. data hash: %s' % data
+        #print '.. data hash: %s' % data
         return np.where( self.datas == data )[0][0]
         
 

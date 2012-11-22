@@ -15,6 +15,9 @@ class Config:
     def getint(self, section, key):
         return self.config.getint(section, key)
 
+    def getfloat(self, section, key):
+        return self.config.getfloat(section, key)
+
     def getbool(self, section, key):
         return self.config.getbool(section, key)
 

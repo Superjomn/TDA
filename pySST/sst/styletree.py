@@ -23,7 +23,7 @@ sys.setdefaultencoding('utf-8')
 
 import math
 
-pageNum = 6
+pageNum = 72
 
 from doter import ElementNodeDoter, StyleNodeDoter, DataNodeDoter
 import math
@@ -46,12 +46,15 @@ def getTagName(node):
     t = re.compile("<[\s]*(\S*)[\s]*[>]*")
     res = t.findall(str(node))
     res = res[0]
-    t = res.find('>')
-    if t>0:
+    t = []
+    t.append(res.find('>'))
+    t.append(res.find('/'))
+    t = [i for i in t if i>0]
+    if t:
+        t = min(t)
         res = res[:t]
     if res.find('!--') != -1: return False
-    if res: return res
-    return False
+    return res
 
 class ElementNode:
     '''
@@ -104,6 +107,12 @@ class ElementNode:
             if node.getPreview() == stylenodename:
                 return node
         return False
+
+    def findStyleNode(self, stylenode):
+        '''
+        only find the stylenode
+        '''
+        return self._searchStyleNode(stylenode.getPreview())
 
     def incCount(self):
         '''
@@ -220,7 +229,7 @@ class StyleNode:
 
     def getPreview(self):
         #return self._preview
-        return self.generatePreview()
+        return trim(self.generatePreview())
 
 
     def getCount(self):
@@ -314,7 +323,7 @@ class DataNode:
         self.datadic.addFeatures(features)
         _dic = Datas(self.dic)
         _dic.addFeatures(features)
-        print 'pagedic', _dic.list.datas
+        #print 'pagedic', _dic.list.datas
         self.pagedatas.append(_dic)
 
     def setName(self, data):
@@ -339,26 +348,32 @@ class DataNode:
         m = len(self.pagedatas)
         l = self.datadic.size()
         if not l: return 0
+        '''
         print '-' * 50
         print 'm: dicsize: ', m
         print 'nodedic: ', self.datadic.list.datas
         print 'pagedatas:'
+        '''
+        '''
         for p in self.pagedatas:
             print p.list.datas
+        '''
 
         def P(i):
+            '''
             print '-' * 50
             print 'P(i): ' + '-'*30
             print 'm: ', m
+            '''
             n = 0
             data_index = self.datadic[i]
             print 'data_index: ', data_index
 
             li = []
             for page in self.pagedatas:
-                print 'find pageindex in page', data_index, page.list.datas
+                #print 'find pageindex in page', data_index, page.list.datas
                 res = np.where(page.list.datas == data_index )
-                print 'find res:', res
+                #print 'find res:', res
                 try:
                     i = res[0][0]
                     li.append(1)
@@ -366,6 +381,7 @@ class DataNode:
                     li.append(0)
                     pass
             n = sum(li)
+            if not n: n=1
             print 'n, m : %d, %d' %  (n, m)
             return [i/n for i in li]
 
@@ -410,8 +426,8 @@ class StyleTree:
         pageNum = num
 
     def cal(self):
-        print '#'*50 
-        print '>>> cal..'
+        #print '#'*50 
+        #print '>>> cal..'
         self.calCompImp(self.body)
 
     def calNodeImp(self, element):
@@ -419,8 +435,8 @@ class StyleTree:
         calcuate the node importance
         @ element : ElementNode
         '''
-        print '>'*30
-        print '>>> calNodeImp'
+        #print '>'*30
+        #print '>>> calNodeImp'
         if element.getImp():
             return element.getImp()
         #else

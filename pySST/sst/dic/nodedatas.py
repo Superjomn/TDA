@@ -33,15 +33,15 @@ class Datas:
     def addFeatures(self, features):
         for feature in features:
             try:
-                print 'addFeatures: find %s' % feature 
+                #print 'addFeatures: find %s' % feature 
                 i = self.dic.find(feature)
-                print '>>> dic: %d' % i
-                print 'list add' 
+                #print '>>> dic: %d' % i
+                #print 'list add' 
                 self.list.add(i)
             except:
                 print "!!!! wrong finding !!!!!"
         self.done()
-        print 'list: ', self.list.datas
+        #print 'list: ', self.list.datas
 
     def hasData(self):
         return bool(self.list.datas)

@@ -8,12 +8,13 @@ import urlparse
 from config import Config
 
 class _UrlParser:
-    def __init__(self, netlocs=[]):
-        self._netlocs = netlocs
+    def __init__(self, homeurls):
+        self.homeurls = homeurls
 
     def matchUrl(self, url):
-        netloc = urlparse.urlparse(url).netloc
-        return netloc in self._netlocs
+        for u in self.homeurls:
+            if url.find(u) != -1: return True
+        return False
 
     def setFiletypes(self, typedic={}):
         '''
@@ -49,8 +50,8 @@ class _SourceParser(_UrlParser):
     '''
     parse html and url
     '''
-    def __init__(self, netlocs=[]):
-        _UrlParser.__init__(self, netlocs)
+    def __init__(self, homeurls=[]):
+        _UrlParser.__init__(self, homeurls)
 
     def setSource(self, source):
         '''

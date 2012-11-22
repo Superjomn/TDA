@@ -52,7 +52,7 @@ class DatatagExtractor:
         #print 'containtags: ', containtags
 
         #remove all tags
-        print 'containtags', containtags
+        #print 'containtags', containtags
         for t in containtags: self.root.remove(t)
         #words as features
         text = self.root.text()
@@ -117,18 +117,20 @@ if __name__ == '__main__':
             <script src="hello">alert('ehllo'); </script>
         </div>
     '''
-    print strr
+    #print strr
     print 'tagname: %s' % getTagName(strr)
     d = DatatagExtractor()
     #strr = open('./test/2').read()
     d.setNode(strr)
     data = d.getFeatures()
+    '''
     for da in data:
         print da
 
     print '-'*50
     print '-'*50
     print '-'*50
+    '''
 
     strr = '''
     <title>hello</title>

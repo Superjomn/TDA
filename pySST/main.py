@@ -58,9 +58,27 @@ def createStyletree():
         sourceparser.parse()
     sourceparser.styletree.cal()
     res = sourceparser.styletree.show()
+    return (dic, sourceparser.styletree)
+
+from sst.tempdec.parser import Parser
+def markNoise(sst):
+    p = Parser()
+    p.setDic(sst[0])
+    p.setSST(sst[1])
+    centre = CentreDicBuilder()
+    paths = centre.buildPath()
+    for i,path in enumerate(paths):
+        c = open(path).read()
+        p.setSource(c)
+        try:
+            p.parse()
+        except:
+            print 'parse Wrong!!!!'
+        p.tofile('resource/%d' % i)
 
 createCentreDic()
-createStyletree()
+sst = createStyletree()
+markNoise(sst)
 
     
     

@@ -93,12 +93,9 @@ class Reptile(_Reptile):
         _netlocs = []
         for url in startpages:
             self._queue.put(url)
-            _netlocs.append(
-                urlparse.urlparse(url).netloc
-            )
         print '.. init startpages: ', startpages
-        print '.. init netlocs: ', _netlocs
-        self._sourceparser = SourceParser(_netlocs)
+
+        self._sourceparser = SourceParser(startpages)
 
     def matchUrl(self, url):
         print 'match url:', url
@@ -107,7 +104,7 @@ class Reptile(_Reptile):
     def run(self):
         print '.. run'
         while not self._queue.empty():
-            time.sleep(random.randint(1,5))
+            time.sleep(random.randint(5,20))
             print '.. while not run'
             url = self._queue.get()
             self._sourceparser.setCurPageUrl(url)
