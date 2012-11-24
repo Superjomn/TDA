@@ -8,8 +8,8 @@ import jieba
 import re
 default_encoding='utf-8'
 def split(data):
+    if not data: return []
     return jieba.cut(data)
-    return data.split()
 '''
 def split(text):
     #text = ''.join(open('somefile.txt').readlines())

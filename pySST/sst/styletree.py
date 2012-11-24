@@ -83,6 +83,9 @@ class ElementNode:
         self._childStyleNodes.append(_datanode)
         self.pageNum = pageNum
 
+        self._is_nodeimp = False
+        self._is_comimp = False
+
     def setName(self, name):
         self._name =  str(name)
 
@@ -147,7 +150,7 @@ class ElementNode:
         if len(self.getChildStyleNodes()) == 1:
             return 1
         '''
-        if self._nodeimp:
+        if self._is_nodeimp:
             return self._nodeimp
         m = self.getCount()
         res = 0
@@ -162,13 +165,16 @@ class ElementNode:
             print 'nodeimp res is: %f' % res
             #res += self.getDataNode().getCompImp()
         self._nodeimp = res
+        self._is_nodeimp = True
         return res
 
     def getCompImp(self):
         r = 0.9
-        if self._imp: return self._imp
+        if self._is_comimp:
+            return self._imp
         if len(self.getChildStyleNodes()) == 1:
             self._imp = self.getDataNode().getCompImp()
+            self._is_comimp = True
             return self._imp
         #else
         res = 0
@@ -181,16 +187,8 @@ class ElementNode:
         ])
         tem /= self.pageNum
         res += tem
-
-        # !!! add datanode's imp
-        former_imp = res
-        try:
-            data_imp = self.getDataNode().getCompImp()
-            k = former_imp / (former_imp + data_imp)
-            res = k * former_imp + (1-k) * data_imp
-        except:
-            pass
         self._imp = res
+        self._is_comimp = True
         return res
 
 
@@ -226,6 +224,8 @@ class StyleNode:
         self.doter.init(self)
         self.dic = dic
         self.pageNum = pageNum
+
+        self._is_comimp = False
 
     def generateStyleNode(self, node):
         '''
@@ -279,13 +279,17 @@ class StyleNode:
         return self._count / self.pageNum
 
     def getCompImp(self):
-        if self._imp:
+        if self._is_comimp:
             return self._imp
 
         k = len(self._children)
+        if not k:
+            self._is_comimp = True
+            return 9
 
         res = sum(child.getCompImp() for child in self._children)
         self._imp = res / k
+        self._is_comimp = True
         return self._imp
     
     def __str__(self):
@@ -333,6 +337,8 @@ class DataNode:
         self._imp = 0
         self.fatherElement = fatherElement
 
+        self._is_comimp = False
+
     def addFeatures(self, features):
         features = [f for f in features]
         self.datadic.addFeatures(features)
@@ -358,11 +364,14 @@ class DataNode:
         return 1
 
     def getCompImp(self):
-        if self._imp: return self._imp
+        if self._is_comimp:
+            return self._imp
 
         m = len(self.pagedatas)
         l = self.datadic.size()
-        if not l: return 0
+        if not l: 
+            self._is_comimp = True
+            return 0
         '''
         print '-' * 50
         print 'm: dicsize: ', m
@@ -408,7 +417,9 @@ class DataNode:
                 res -= p * math.log(p, m)
             return res
 
-        if m ==1: return 1
+        if m ==1: 
+            self._is_comimp = True
+            return 1
         res = sum(
             [H(i) for i in range(l)]
         )
@@ -416,6 +427,7 @@ class DataNode:
         res = 1 - res/l
         self._imp = res
         print 'H(i): ', self._imp
+        self._is_comimp = True
         return res
 
     def _addData(self, data):

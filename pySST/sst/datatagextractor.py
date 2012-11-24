@@ -117,20 +117,20 @@ if __name__ == '__main__':
             <script src="hello">alert('ehllo'); </script>
         </div>
     '''
-    print strr
-    print '-' * 50
+    #print strr
     print 'tagname: %s' % getTagName(strr)
     d = DatatagExtractor()
     #strr = open('./test/2').read()
     d.setNode(strr)
     data = d.getFeatures()
-    print 'get features:'
+    '''
     for da in data:
         print da
 
     print '-'*50
     print '-'*50
     print '-'*50
+    '''
 
     strr = '''
     <title>hello</title>

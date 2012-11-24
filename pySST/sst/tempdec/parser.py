@@ -12,10 +12,10 @@ from pyquery import PyQuery as pq
 
 
 class Parser:
-    def __init__(self):
-        _config = Config()
-        self.value = _config.getfloat('rank', 'value')
+    def __init__(self, value):
+        self.value = value
         self.stack = Stack()
+        _config = Config()
         self.pageNum = len(_config.getSourcePaths())
 
     def setDic(self, dic):
@@ -48,13 +48,13 @@ class Parser:
         if isnoise:
             try:
                 fnode.css('background-color', 'gray')
-                fnode.css('border', '1px solid yellow')
+                #fnode.css('border', '1px solid yellow')
             except:
                 print 'mark wrong!!!!'
         else:
             try:
                 fnode.css('background-color', 'blue')
-                fnode.css('border', '1px solid red')
+                #fnode.css('border', '1px solid red')
             except:
                 print 'mark wrong!!!!'
 

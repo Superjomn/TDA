@@ -19,7 +19,7 @@ class _Reptile:
     '''
     single tutorial
     '''
-    def __init__(self, pageNum=200):
+    def __init__(self, pageNum=2000):
         self._urlist = Urlist()
         self._queue = Q.Queue()
         self.pageNum = pageNum
@@ -104,7 +104,7 @@ class Reptile(_Reptile):
     def run(self):
         print '.. run'
         while not self._queue.empty():
-            time.sleep(random.randint(5,20))
+            time.sleep(random.randint(3,6))
             print '.. while not run'
             url = self._queue.get()
             self._sourceparser.setCurPageUrl(url)
