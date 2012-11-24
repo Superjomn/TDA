@@ -52,9 +52,11 @@ class Parser:
             except:
                 print 'mark wrong!!!!'
         else:
-            fnode.css('background-color', 'blue')
-            fnode.css('border', '1px solid red')
-            print 'mark wrong!!!!'
+            try:
+                fnode.css('background-color', 'blue')
+                fnode.css('border', '1px solid red')
+            except:
+                print 'mark wrong!!!!'
 
     def parseIter(self):
 

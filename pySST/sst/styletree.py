@@ -181,6 +181,15 @@ class ElementNode:
         ])
         tem /= self.pageNum
         res += tem
+
+        # !!! add datanode's imp
+        former_imp = res
+        try:
+            data_imp = self.getDataNode().getCompImp()
+            k = former_imp / (former_imp + data_imp)
+            res = k * former_imp + (1-k) * data_imp
+        except:
+            pass
         self._imp = res
         return res
 
