@@ -71,7 +71,7 @@ def createStyletree(ci):
 
 from sst.tempdec.parser import Parser
 def markNoise(sst, ci):
-    values = [0.33, 0.2, 0.4, 0.1]
+    values = [0.33, 0.2, 0.4, 0.5]
     for value in values:
         #create path
         try:
