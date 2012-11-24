@@ -21,6 +21,9 @@ class Config:
     def getbool(self, section, key):
         return self.config.getbool(section, key)
 
+    def getSourcePaths(self):
+        basepath = self.get('path', 'source')
+        return [basepath + path for path in os.listdir(basepath)]
 
 if __name__ == '__main__':
     config = Config()

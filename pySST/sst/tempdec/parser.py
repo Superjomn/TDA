@@ -16,6 +16,7 @@ class Parser:
         _config = Config()
         self.value = _config.getfloat('rank', 'value')
         self.stack = Stack()
+        self.pageNum = len(_config.getSourcePaths())
 
     def setDic(self, dic):
         self.dic = dic
@@ -25,6 +26,8 @@ class Parser:
 
     def setSource(self, source):
         self.pq = pq(source)
+        self.pq.remove('script')
+        self.pq.remove('style')
 
     def parse(self):
         body = self.pq('body')
@@ -45,15 +48,13 @@ class Parser:
         if isnoise:
             try:
                 fnode.css('background-color', 'gray')
-                fnode.css('border', '2px solid yellow')
+                fnode.css('border', '1px solid yellow')
             except:
                 print 'mark wrong!!!!'
         else:
-            try:
-                fnode.css('background-color', 'blue')
-                fnode.css('border', '2px solid red')
-            except:
-                print 'mark wrong!!!!'
+            fnode.css('background-color', 'blue')
+            fnode.css('border', '1px solid red')
+            print 'mark wrong!!!!'
 
     def parseIter(self):
 
@@ -79,29 +80,27 @@ class Parser:
             #print 'addStyleNode(%s)'% node
             #clean node
             childnodes = node.children()
-            stylenode = StyleNode(self.dic)
+            stylenode = StyleNode(self.dic, self.pageNum)
             assert node != None , "addStyleNode(None)"
             stylenode.generateStyleNode(node)
-            print 'stylenode:', stylenode.generatePreview()
+            print 'find stylenode:', stylenode.generatePreview()
             stylenodes = element.getChildStyleNodes()[1:]
             print '.. start stylenodes list:'
             for node in stylenodes:
                 print 'stylenodes: ', node.getPreview()
             print '.. end stylenode list'
             _stylenode = element.findStyleNode(stylenode)
+
             print 'find _stylenode', _stylenode
             j = -1
             for i in range(len(childnodes)):
-                try:
-                    child = childnodes.eq(i)
-                    tag = getTagName(child)
-                    #print '** tag:', tag
-                    if tag not in nodenames:
-                        j += 1
-                        childnode = _stylenode.getChild(j)
-                        self.stack.push([ childnodes.eq(i), childnode ])
-                except:
-                    print 'wrong!!!!'
+                child = childnodes.eq(i)
+                tag = getTagName(child)
+                #print '** tag:', tag
+                if tag not in nodenames:
+                    j += 1
+                    childnode = _stylenode.getChild(j)
+                    self.stack.push([ childnodes.eq(i), childnode ])
                 
         while not self.stack.empty():
             (node , element) = self.stack.pop()

@@ -63,13 +63,8 @@ class SourceParser:
 
     def setSource(self, source):
         self.pq = pq(source)
-        '''
-        self.pq.remove('script')
         self.pq.remove('style')
-        '''
-
-    def setPagenum(self, num):
-        self.styletree.setPagenum(num)
+        self.pq.remove('script')
 
     def parse(self):
         body = self.pq('body')
@@ -105,7 +100,7 @@ class SourceParser:
             #print 'addStyleNode(%s)'% node
             #clean node
             childnodes = node.children()
-            stylenode = StyleNode(self.dic)
+            stylenode = StyleNode(self.dic, self.styletree.pageNum)
             assert node != None , "addStyleNode(None)"
             stylenode.generateStyleNode(node)
             _stylenode = element.registerStyleNode(stylenode)

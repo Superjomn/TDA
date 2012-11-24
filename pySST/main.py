@@ -51,7 +51,6 @@ def createStyletree():
     sourceparser = SourceParser(dic)
     centre = CentreDicBuilder()
     paths = centre.buildPath()
-    sourceparser.setPagenum(len(paths))
     for path in paths:
         c = open(path).read()
         sourceparser.setSource(c)
@@ -70,10 +69,8 @@ def markNoise(sst):
     for i,path in enumerate(paths):
         c = open(path).read()
         p.setSource(c)
-        try:
-            p.parse()
-        except:
-            print 'parse Wrong!!!!'
+        p.parse()
+        print 'parse Wrong!!!!'
         p.tofile('resource/%d' % i)
 
 createCentreDic()

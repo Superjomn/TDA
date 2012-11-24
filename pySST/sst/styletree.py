@@ -21,9 +21,10 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-import math
+sys.path.append('../')
+from config import Config
 
-pageNum = 72
+import math
 
 from doter import ElementNodeDoter, StyleNodeDoter, DataNodeDoter
 import math
@@ -67,7 +68,7 @@ class ElementNode:
             imp = 0,
         ]
     '''
-    def __init__(self, name, dic):
+    def __init__(self, name, dic, pageNum):
         #print ">>> construct ElementNode: %s" % name
         self._name = name
         self._childStyleNodes = []
@@ -80,6 +81,7 @@ class ElementNode:
         #set DataNode default pos 0
         _datanode = DataNode(self, dic)
         self._childStyleNodes.append(_datanode)
+        self.pageNum = pageNum
 
     def setName(self, name):
         self._name =  str(name)
@@ -124,7 +126,7 @@ class ElementNode:
         return self._count
 
     def getP(self):
-        return self._count / pageNum
+        return self._count / self.pageNum
 
     def registerStyleNode(self, stylenode):
         if not trim(stylenode.getPreview()):
@@ -153,9 +155,12 @@ class ElementNode:
             res = 1
         else:
             for stylenode in self.getChildStyleNodes()[1:]:
-                pi = stylenode.getCount() / pageNum
+                pi = stylenode.getCount() / self.getCount()
                 res -= pi * math.log(pi, m)
-            res += self.getDataNode().getCompImp()
+                print '>>> pi: %f' % pi
+                print '@'*50
+            print 'nodeimp res is: %f' % res
+            #res += self.getDataNode().getCompImp()
         self._nodeimp = res
         return res
 
@@ -163,8 +168,8 @@ class ElementNode:
         r = 0.9
         if self._imp: return self._imp
         if len(self.getChildStyleNodes()) == 1:
-            self._imp = self.getNodeImp()
-            return self.getNodeImp()
+            self._imp = self.getDataNode().getCompImp()
+            return self._imp
         #else
         res = 0
         res += (1 - r) * self.getNodeImp()
@@ -174,7 +179,7 @@ class ElementNode:
             stylenode.getP() * stylenode.getCompImp()
                 for stylenode in self.getChildStyleNodes()[1:]
         ])
-        tem /= pageNum
+        tem /= self.pageNum
         res += tem
         self._imp = res
         return res
@@ -201,7 +206,7 @@ class ElementNode:
 
 
 class StyleNode:
-    def __init__(self, dic):
+    def __init__(self, dic, pageNum):
         #print "construct StyleNode: ",
         self._preview = ''
         self._imp = 0
@@ -211,6 +216,7 @@ class StyleNode:
         self.doter = StyleNodeDoter()
         self.doter.init(self)
         self.dic = dic
+        self.pageNum = pageNum
 
     def generateStyleNode(self, node):
         '''
@@ -223,7 +229,7 @@ class StyleNode:
             tagname = getTagName(childnode)
             if tagname in nodenames: continue
             #generate ...
-            element = ElementNode(self._getTag(childnode), self.dic)
+            element = ElementNode(self._getTag(childnode), self.dic, self.pageNum)
             #print '.. Element : ',element
             self.addChildElement(element)
 
@@ -261,7 +267,7 @@ class StyleNode:
             element.incCount()
 
     def getP(self):
-        return self._count / pageNum
+        return self._count / self.pageNum
 
     def getCompImp(self):
         if self._imp:
@@ -269,7 +275,7 @@ class StyleNode:
 
         k = len(self._children)
 
-        res = sum([child.getCompImp() for child in self._children])
+        res = sum(child.getCompImp() for child in self._children)
         self._imp = res / k
         return self._imp
     
@@ -420,10 +426,9 @@ class DataNode:
 
 class StyleTree:
     def __init__(self, dic):
-        self.body = ElementNode('body', dic)
-
-    def setPagenum(self, num):
-        pageNum = num
+        _config = Config()
+        self.pageNum = len(_config.getSourcePaths())
+        self.body = ElementNode('body', dic, self.pageNum)
 
     def cal(self):
         #print '#'*50 
